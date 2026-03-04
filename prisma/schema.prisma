@@ -1,0 +1,64 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Question {
+  id              String             @id @default(cuid())
+  category        Category
+  difficulty      Int                // 1=easy, 2=medium, 3=hard
+  stem            String
+  correctOptionId String
+  tags            String[]           @default([])
+  createdAt       DateTime           @default(now())
+  updatedAt       DateTime           @updatedAt
+  options         Option[]
+  instances       QuestionInstance[]
+}
+
+model Option {
+  id         String   @id @default(cuid())
+  questionId String
+  label      String   // A, B, C, D
+  text       String
+  question   Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
+}
+
+model TestSession {
+  id        String             @id @default(cuid())
+  userId    String?
+  startedAt DateTime           @default(now())
+  endsAt    DateTime
+  status    SessionStatus      @default(active)
+  questions QuestionInstance[]
+}
+
+model QuestionInstance {
+  id           String       @id @default(cuid())
+  sessionId    String
+  questionId   String
+  order        Int
+  userAnswerId String?
+  answeredAt   DateTime?
+  session      TestSession  @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  question     Question     @relation(fields: [questionId], references: [id])
+
+  @@unique([sessionId, questionId])
+  @@unique([sessionId, order])
+}
+
+enum Category {
+  verbal
+  math_logic
+  spatial
+}
+
+enum SessionStatus {
+  active
+  completed
+  expired
+}
