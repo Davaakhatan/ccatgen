@@ -693,4 +693,413 @@ export const spatialQuestions: QuestionData[] = [
     ],
     correctLabel: "A", tags: ["next-in-series"],
   },
+
+  // ===================== ADDITIONAL 20 QUESTIONS =====================
+
+  // A1: Next in series — shapes shrink
+  {
+    category: "spatial", difficulty: 1,
+    stem: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 340 80" width="340" height="80">
+      ${sep(80)}${sep(160)}${sep(240)}
+      ${shapes.rect(10, 10, 60, 60)}${shapes.rect(90, 15, 50, 50)}${shapes.rect(170, 20, 40, 40)}${qmark(290, 40)}
+    </svg><br/>The square gets smaller each step. What comes next?`,
+    options: [
+      { label: "A", text: svg(60, 60, shapes.rect(15, 15, 30, 30)) },
+      { label: "B", text: svg(60, 60, shapes.rect(5, 5, 50, 50)) },
+      { label: "C", text: svg(60, 60, shapes.rect(20, 20, 20, 20)) },
+      { label: "D", text: svg(60, 60, shapes.circle(30, 30, 15)) },
+    ],
+    correctLabel: "A", tags: ["next-in-series"],
+  },
+
+  // A2: Odd one out — four have stripes, one is solid
+  {
+    category: "spatial", difficulty: 1,
+    stem: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 80" width="400" height="80">
+      <text x="10" y="14" font-size="11" fill="#666">1</text>
+      ${shapes.circle(40, 45, 18)}${shapes.line(22, 45, 58, 45)}
+      <text x="90" y="14" font-size="11" fill="#666">2</text>
+      ${shapes.circle(120, 45, 18)}${shapes.line(102, 45, 138, 45)}
+      <text x="170" y="14" font-size="11" fill="#666">3</text>
+      ${shapes.circle(200, 45, 18, "#333")}
+      <text x="250" y="14" font-size="11" fill="#666">4</text>
+      ${shapes.circle(280, 45, 18)}${shapes.line(262, 45, 298, 45)}
+      <text x="330" y="14" font-size="11" fill="#666">5</text>
+      ${shapes.circle(360, 45, 18)}${shapes.line(342, 45, 378, 45)}
+    </svg><br/>Which figure is the odd one out?`,
+    options: [
+      { label: "A", text: "Figure 1" },
+      { label: "B", text: "Figure 3" },
+      { label: "C", text: "Figure 4" },
+      { label: "D", text: "Figure 5" },
+    ],
+    correctLabel: "B", tags: ["odd-one-out"],
+  },
+
+  // A3: Next in series — triangle flips each step
+  {
+    category: "spatial", difficulty: 1,
+    stem: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 340 80" width="340" height="80">
+      ${sep(80)}${sep(160)}${sep(240)}
+      <polygon points="40,20 20,60 60,60" fill="none" stroke="#333" stroke-width="2"/>
+      <polygon points="100,60 120,20 140,60" fill="none" stroke="#333" stroke-width="2"/>
+      <polygon points="200,20 180,60 220,60" fill="none" stroke="#333" stroke-width="2"/>
+      ${qmark(290, 40)}
+    </svg><br/>The triangle flips up and down. What comes next?`,
+    options: [
+      { label: "A", text: svg(60, 60, `<polygon points="30,50 10,10 50,10" fill="none" stroke="#333" stroke-width="2"/>`) },
+      { label: "B", text: svg(60, 60, `<polygon points="30,10 10,50 50,50" fill="none" stroke="#333" stroke-width="2"/>`) },
+      { label: "C", text: svg(60, 60, shapes.rect(14, 14, 32, 32)) },
+      { label: "D", text: svg(60, 60, shapes.circle(30, 30, 18)) },
+    ],
+    correctLabel: "A", tags: ["next-in-series"],
+  },
+
+  // A4: Next in series — alternating fill: empty, half, full
+  {
+    category: "spatial", difficulty: 2,
+    stem: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 80" width="400" height="80">
+      ${sep(80)}${sep(160)}${sep(240)}${sep(320)}
+      ${shapes.rect(16, 16, 48, 48)}
+      <rect x="96" y="16" width="48" height="48" fill="none" stroke="#333" stroke-width="2"/><rect x="96" y="40" width="48" height="24" fill="#333"/>
+      ${shapes.rect(176, 16, 48, 48, "#333")}
+      ${shapes.rect(256, 16, 48, 48)}
+      ${qmark(360, 40)}
+    </svg><br/>Pattern: empty, half-filled, full, empty, ___. What comes next?`,
+    options: [
+      { label: "A", text: "Full square" },
+      { label: "B", text: "Half-filled square" },
+      { label: "C", text: "Empty square" },
+      { label: "D", text: "Quarter-filled square" },
+    ],
+    correctLabel: "B", tags: ["next-in-series"],
+  },
+
+  // A5: Matrix — size changes
+  {
+    category: "spatial", difficulty: 2,
+    stem: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240" width="240" height="240">
+      <rect x="0" y="0" width="240" height="240" fill="#fafafa" stroke="#ddd"/>
+      <line x1="80" y1="0" x2="80" y2="240" stroke="#ddd"/><line x1="160" y1="0" x2="160" y2="240" stroke="#ddd"/>
+      <line x1="0" y1="80" x2="240" y2="80" stroke="#ddd"/><line x1="0" y1="160" x2="240" y2="160" stroke="#ddd"/>
+      ${shapes.circle(40, 40, 10)}${shapes.circle(120, 40, 18)}${shapes.circle(200, 40, 26)}
+      ${shapes.rect(28, 108, 24, 24)}${shapes.rect(100, 100, 40, 40)}${shapes.rect(172, 92, 56, 56)}
+      ${shapes.triangle(40, 200, 24)}${shapes.triangle(120, 200, 40)}${qmark(200, 200)}
+    </svg><br/>Each row shows shapes getting bigger left to right. What goes in the missing cell?`,
+    options: [
+      { label: "A", text: svg(60, 60, shapes.triangle(30, 30, 52)) },
+      { label: "B", text: svg(60, 60, shapes.triangle(30, 30, 32)) },
+      { label: "C", text: svg(60, 60, shapes.circle(30, 30, 26)) },
+      { label: "D", text: svg(60, 60, shapes.triangle(30, 30, 24)) },
+    ],
+    correctLabel: "A", tags: ["matrix"],
+  },
+
+  // A6: Next in series — two shapes swap positions
+  {
+    category: "spatial", difficulty: 2,
+    stem: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 340 80" width="340" height="80">
+      ${sep(80)}${sep(160)}${sep(240)}
+      ${shapes.circle(25, 40, 12, "#333")}${shapes.rect(45, 28, 24, 24)}
+      ${shapes.rect(92, 28, 24, 24, "#333")}${shapes.circle(135, 40, 12)}
+      ${shapes.circle(185, 40, 12, "#333")}${shapes.rect(205, 28, 24, 24)}
+      ${qmark(290, 40)}
+    </svg><br/>The circle and square swap positions and fills each step. What comes next?`,
+    options: [
+      { label: "A", text: svg(60, 60, `${shapes.rect(6, 18, 24, 24, "#333")}${shapes.circle(48, 30, 12)}`) },
+      { label: "B", text: svg(60, 60, `${shapes.circle(18, 30, 12, "#333")}${shapes.rect(30, 18, 24, 24)}`) },
+      { label: "C", text: svg(60, 60, `${shapes.rect(6, 18, 24, 24)}${shapes.circle(48, 30, 12, "#333")}`) },
+      { label: "D", text: svg(60, 60, `${shapes.circle(18, 30, 12)}${shapes.rect(30, 18, 24, 24, "#333")}`) },
+    ],
+    correctLabel: "A", tags: ["next-in-series"],
+  },
+
+  // A7: Odd one out — different number of dots
+  {
+    category: "spatial", difficulty: 2,
+    stem: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 90" width="400" height="90">
+      <text x="10" y="14" font-size="11" fill="#666">1</text>
+      ${shapes.rect(15, 25, 50, 50)}<circle cx="28" cy="38" r="4" fill="#333"/><circle cx="52" cy="38" r="4" fill="#333"/><circle cx="40" cy="58" r="4" fill="#333"/>
+      <text x="90" y="14" font-size="11" fill="#666">2</text>
+      ${shapes.rect(95, 25, 50, 50)}<circle cx="108" cy="38" r="4" fill="#333"/><circle cx="132" cy="38" r="4" fill="#333"/><circle cx="120" cy="58" r="4" fill="#333"/>
+      <text x="170" y="14" font-size="11" fill="#666">3</text>
+      ${shapes.rect(175, 25, 50, 50)}<circle cx="188" cy="38" r="4" fill="#333"/><circle cx="212" cy="38" r="4" fill="#333"/>
+      <text x="250" y="14" font-size="11" fill="#666">4</text>
+      ${shapes.rect(255, 25, 50, 50)}<circle cx="268" cy="38" r="4" fill="#333"/><circle cx="292" cy="38" r="4" fill="#333"/><circle cx="280" cy="58" r="4" fill="#333"/>
+      <text x="330" y="14" font-size="11" fill="#666">5</text>
+      ${shapes.rect(335, 25, 50, 50)}<circle cx="348" cy="38" r="4" fill="#333"/><circle cx="372" cy="38" r="4" fill="#333"/><circle cx="360" cy="58" r="4" fill="#333"/>
+    </svg><br/>Which figure is the odd one out?`,
+    options: [
+      { label: "A", text: "Figure 1" },
+      { label: "B", text: "Figure 2" },
+      { label: "C", text: "Figure 3" },
+      { label: "D", text: "Figure 5" },
+    ],
+    correctLabel: "C", tags: ["odd-one-out"],
+  },
+
+  // A8: Next in series — shape morphing circle→oval→rectangle
+  {
+    category: "spatial", difficulty: 1,
+    stem: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 340 80" width="340" height="80">
+      ${sep(80)}${sep(160)}${sep(240)}
+      <circle cx="40" cy="40" r="20" fill="none" stroke="#333" stroke-width="2"/>
+      <ellipse cx="120" cy="40" rx="26" ry="16" fill="none" stroke="#333" stroke-width="2"/>
+      ${shapes.rect(176, 24, 48, 32)}
+      ${qmark(290, 40)}
+    </svg><br/>Circle becomes oval becomes rectangle. What shape is most different from this pattern?`,
+    options: [
+      { label: "A", text: "Square" },
+      { label: "B", text: "Triangle" },
+      { label: "C", text: "Wider rectangle" },
+      { label: "D", text: "Narrow rectangle" },
+    ],
+    correctLabel: "B", tags: ["next-in-series"],
+  },
+
+  // A9: Next in series — arrow rotates 60° each step
+  {
+    category: "spatial", difficulty: 2,
+    stem: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 80" width="400" height="80">
+      ${sep(80)}${sep(160)}${sep(240)}${sep(320)}
+      ${shapes.arrow(40, 40, 0)}${shapes.arrow(120, 40, 60)}${shapes.arrow(200, 40, 120)}${shapes.arrow(280, 40, 180)}${qmark(360, 40)}
+    </svg><br/>The arrow rotates 60° each step. What comes next?`,
+    options: [
+      { label: "A", text: svg(60, 60, shapes.arrow(30, 30, 240)) },
+      { label: "B", text: svg(60, 60, shapes.arrow(30, 30, 270)) },
+      { label: "C", text: svg(60, 60, shapes.arrow(30, 30, 200)) },
+      { label: "D", text: svg(60, 60, shapes.arrow(30, 30, 300)) },
+    ],
+    correctLabel: "A", tags: ["next-in-series"],
+  },
+
+  // A10: Matrix — rotation pattern
+  {
+    category: "spatial", difficulty: 3,
+    stem: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240" width="240" height="240">
+      <rect x="0" y="0" width="240" height="240" fill="#fafafa" stroke="#ddd"/>
+      <line x1="80" y1="0" x2="80" y2="240" stroke="#ddd"/><line x1="160" y1="0" x2="160" y2="240" stroke="#ddd"/>
+      <line x1="0" y1="80" x2="240" y2="80" stroke="#ddd"/><line x1="0" y1="160" x2="240" y2="160" stroke="#ddd"/>
+      ${shapes.arrow(40, 40, 0)}${shapes.arrow(120, 40, 90)}${shapes.arrow(200, 40, 180)}
+      ${shapes.arrow(40, 120, 90)}${shapes.arrow(120, 120, 180)}${shapes.arrow(200, 120, 270)}
+      ${shapes.arrow(40, 200, 180)}${shapes.arrow(120, 200, 270)}${qmark(200, 200)}
+    </svg><br/>Each row rotates 90° more. What goes in the missing cell?`,
+    options: [
+      { label: "A", text: svg(60, 60, shapes.arrow(30, 30, 0)) },
+      { label: "B", text: svg(60, 60, shapes.arrow(30, 30, 360)) },
+      { label: "C", text: svg(60, 60, shapes.arrow(30, 30, 270)) },
+      { label: "D", text: svg(60, 60, shapes.arrow(30, 30, 90)) },
+    ],
+    correctLabel: "A", tags: ["matrix"],
+  },
+
+  // A11: Odd one out — four have even sides, one odd
+  {
+    category: "spatial", difficulty: 1,
+    stem: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 80" width="400" height="80">
+      <text x="10" y="14" font-size="11" fill="#666">1</text>${shapes.rect(18, 22, 36, 36)}
+      <text x="90" y="14" font-size="11" fill="#666">2</text>${shapes.hexagon(120, 45, 20)}
+      <text x="170" y="14" font-size="11" fill="#666">3</text>${shapes.rect(180, 22, 36, 36)}
+      <text x="250" y="14" font-size="11" fill="#666">4</text>${shapes.triangle(280, 45, 38)}
+      <text x="330" y="14" font-size="11" fill="#666">5</text>${shapes.rect(340, 22, 36, 36)}
+    </svg><br/>Which figure has a different number of sides from the majority?`,
+    options: [
+      { label: "A", text: "Figure 2" },
+      { label: "B", text: "Figure 3" },
+      { label: "C", text: "Figure 4" },
+      { label: "D", text: "Figure 5" },
+    ],
+    correctLabel: "C", tags: ["odd-one-out"],
+  },
+
+  // A12: Next in series — dots increase in triangle pattern
+  {
+    category: "spatial", difficulty: 2,
+    stem: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 80" width="400" height="80">
+      ${sep(80)}${sep(160)}${sep(240)}${sep(320)}
+      <circle cx="40" cy="40" r="6" fill="#333"/>
+      <circle cx="110" cy="30" r="6" fill="#333"/><circle cx="130" cy="30" r="6" fill="#333"/><circle cx="120" cy="50" r="6" fill="#333"/>
+      <circle cx="170" cy="20" r="6" fill="#333"/><circle cx="190" cy="20" r="6" fill="#333"/><circle cx="210" cy="20" r="6" fill="#333"/><circle cx="180" cy="40" r="6" fill="#333"/><circle cx="200" cy="40" r="6" fill="#333"/><circle cx="190" cy="60" r="6" fill="#333"/>
+      ${qmark(290, 40)}
+    </svg><br/>The dots form triangle numbers: 1, 3, 6, ___. How many dots come next?`,
+    options: [
+      { label: "A", text: "8" },
+      { label: "B", text: "9" },
+      { label: "C", text: "10" },
+      { label: "D", text: "12" },
+    ],
+    correctLabel: "C", tags: ["next-in-series"],
+  },
+
+  // A13: Next in series — shape gains one more side each step (all filled)
+  {
+    category: "spatial", difficulty: 1,
+    stem: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 340 80" width="340" height="80">
+      ${sep(80)}${sep(160)}${sep(240)}
+      ${shapes.triangle(40, 40, 36, "#333")}${shapes.rect(98, 18, 44, 44, "#333")}${shapes.pentagon(200, 40, 22, "#333")}${qmark(290, 40)}
+    </svg><br/>Each shape adds one more side and is filled. What comes next?`,
+    options: [
+      { label: "A", text: svg(60, 60, shapes.hexagon(30, 30, 20, "#333")) },
+      { label: "B", text: svg(60, 60, shapes.circle(30, 30, 20, "#333")) },
+      { label: "C", text: svg(60, 60, shapes.hexagon(30, 30, 20)) },
+      { label: "D", text: svg(60, 60, shapes.star(30, 30, 20, 10, "#333")) },
+    ],
+    correctLabel: "A", tags: ["next-in-series"],
+  },
+
+  // A14: Odd one out — different rotation direction
+  {
+    category: "spatial", difficulty: 2,
+    stem: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 90" width="400" height="90">
+      <text x="10" y="14" font-size="11" fill="#666">1</text>
+      <g transform="translate(15,20)">${shapes.rect(0, 0, 50, 50)}${shapes.line(0, 0, 50, 50)}</g>
+      <text x="90" y="14" font-size="11" fill="#666">2</text>
+      <g transform="translate(95,20)">${shapes.rect(0, 0, 50, 50)}${shapes.line(0, 0, 50, 50)}</g>
+      <text x="170" y="14" font-size="11" fill="#666">3</text>
+      <g transform="translate(175,20)">${shapes.rect(0, 0, 50, 50)}${shapes.line(50, 0, 0, 50)}</g>
+      <text x="250" y="14" font-size="11" fill="#666">4</text>
+      <g transform="translate(255,20)">${shapes.rect(0, 0, 50, 50)}${shapes.line(0, 0, 50, 50)}</g>
+      <text x="330" y="14" font-size="11" fill="#666">5</text>
+      <g transform="translate(335,20)">${shapes.rect(0, 0, 50, 50)}${shapes.line(0, 0, 50, 50)}</g>
+    </svg><br/>Which figure has the diagonal line going in a different direction?`,
+    options: [
+      { label: "A", text: "Figure 1" },
+      { label: "B", text: "Figure 2" },
+      { label: "C", text: "Figure 3" },
+      { label: "D", text: "Figure 4" },
+    ],
+    correctLabel: "C", tags: ["odd-one-out"],
+  },
+
+  // A15: Next in series — shapes double each step
+  {
+    category: "spatial", difficulty: 2,
+    stem: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 80" width="400" height="80">
+      ${sep(100)}${sep(200)}${sep(300)}
+      <circle cx="50" cy="40" r="10" fill="#333"/>
+      <circle cx="130" cy="30" r="10" fill="#333"/><circle cx="170" cy="50" r="10" fill="#333"/>
+      <circle cx="210" cy="25" r="10" fill="#333"/><circle cx="240" cy="25" r="10" fill="#333"/><circle cx="210" cy="55" r="10" fill="#333"/><circle cx="240" cy="55" r="10" fill="#333"/>
+      ${qmark(350, 40)}
+    </svg><br/>The number of dots doubles each step: 1, 2, 4, ___. How many next?`,
+    options: [
+      { label: "A", text: "6" },
+      { label: "B", text: "8" },
+      { label: "C", text: "5" },
+      { label: "D", text: "10" },
+    ],
+    correctLabel: "B", tags: ["next-in-series"],
+  },
+
+  // A16: Complex matrix — shape + orientation
+  {
+    category: "spatial", difficulty: 3,
+    stem: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240" width="240" height="240">
+      <rect x="0" y="0" width="240" height="240" fill="#fafafa" stroke="#ddd"/>
+      <line x1="80" y1="0" x2="80" y2="240" stroke="#ddd"/><line x1="160" y1="0" x2="160" y2="240" stroke="#ddd"/>
+      <line x1="0" y1="80" x2="240" y2="80" stroke="#ddd"/><line x1="0" y1="160" x2="240" y2="160" stroke="#ddd"/>
+      ${shapes.circle(40, 40, 16)}<circle cx="40" cy="28" r="4" fill="#333"/>
+      ${shapes.circle(120, 40, 16)}<circle cx="132" cy="40" r="4" fill="#333"/>
+      ${shapes.circle(200, 40, 16)}<circle cx="200" cy="52" r="4" fill="#333"/>
+      ${shapes.rect(22, 102, 36, 36)}<circle cx="40" cy="108" r="4" fill="#333"/>
+      ${shapes.rect(102, 102, 36, 36)}<circle cx="132" cy="120" r="4" fill="#333"/>
+      ${shapes.rect(182, 102, 36, 36)}<circle cx="200" cy="132" r="4" fill="#333"/>
+      ${shapes.triangle(40, 200, 36)}<circle cx="40" cy="188" r="4" fill="#333"/>
+      ${shapes.triangle(120, 200, 36)}<circle cx="132" cy="200" r="4" fill="#333"/>
+      ${qmark(200, 200)}
+    </svg><br/>The dot rotates clockwise around each shape. What goes in the missing cell?`,
+    options: [
+      { label: "A", text: "Triangle with dot at bottom" },
+      { label: "B", text: "Triangle with dot at right" },
+      { label: "C", text: "Triangle with dot at left" },
+      { label: "D", text: "Circle with dot at bottom" },
+    ],
+    correctLabel: "A", tags: ["matrix"],
+  },
+
+  // A17: Next in series — cross rotates 45°
+  {
+    category: "spatial", difficulty: 1,
+    stem: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 340 80" width="340" height="80">
+      ${sep(80)}${sep(160)}${sep(240)}
+      <g transform="rotate(0,40,40)">${shapes.cross(40, 40, 16)}</g>
+      <g transform="rotate(45,120,40)">${shapes.cross(120, 40, 16)}</g>
+      <g transform="rotate(0,200,40)">${shapes.cross(200, 40, 16)}</g>
+      ${qmark(290, 40)}
+    </svg><br/>The cross alternates between upright and tilted 45°. What comes next?`,
+    options: [
+      { label: "A", text: "Tilted 45° cross" },
+      { label: "B", text: "Upright cross" },
+      { label: "C", text: "Tilted 90° cross" },
+      { label: "D", text: "Circle" },
+    ],
+    correctLabel: "A", tags: ["next-in-series"],
+  },
+
+  // A18: Odd one out — one is a different size
+  {
+    category: "spatial", difficulty: 1,
+    stem: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 80" width="400" height="80">
+      <text x="10" y="14" font-size="11" fill="#666">1</text>${shapes.circle(40, 45, 18)}
+      <text x="90" y="14" font-size="11" fill="#666">2</text>${shapes.circle(120, 45, 18)}
+      <text x="170" y="14" font-size="11" fill="#666">3</text>${shapes.circle(200, 45, 18)}
+      <text x="250" y="14" font-size="11" fill="#666">4</text>${shapes.circle(280, 45, 10)}
+      <text x="330" y="14" font-size="11" fill="#666">5</text>${shapes.circle(360, 45, 18)}
+    </svg><br/>Which figure is the odd one out?`,
+    options: [
+      { label: "A", text: "Figure 1" },
+      { label: "B", text: "Figure 2" },
+      { label: "C", text: "Figure 4" },
+      { label: "D", text: "Figure 5" },
+    ],
+    correctLabel: "C", tags: ["odd-one-out"],
+  },
+
+  // A19: Complex odd one out — all have same area except one
+  {
+    category: "spatial", difficulty: 3,
+    stem: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 420 100" width="420" height="100">
+      <text x="10" y="14" font-size="11" fill="#666">1</text>
+      ${shapes.rect(15, 25, 40, 40, "#333")}
+      <text x="90" y="14" font-size="11" fill="#666">2</text>
+      ${shapes.rect(95, 25, 20, 80, "#333")}
+      <text x="170" y="14" font-size="11" fill="#666">3</text>
+      ${shapes.rect(175, 25, 80, 20, "#333")}
+      <text x="260" y="14" font-size="11" fill="#666">4</text>
+      ${shapes.rect(265, 25, 50, 30, "#333")}
+      <text x="345" y="14" font-size="11" fill="#666">5</text>
+      ${shapes.rect(350, 25, 32, 50, "#333")}
+    </svg><br/>All rectangles have the same area (1600 sq units) except one. Which is different?`,
+    options: [
+      { label: "A", text: "Figure 2" },
+      { label: "B", text: "Figure 3" },
+      { label: "C", text: "Figure 4" },
+      { label: "D", text: "Figure 5" },
+    ],
+    correctLabel: "C", tags: ["odd-one-out"],
+  },
+
+  // A20: Complex next in series — shapes combine
+  {
+    category: "spatial", difficulty: 3,
+    stem: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 100" width="400" height="100">
+      ${sep(100)}${sep(200)}${sep(300)}
+      <g transform="translate(10,10)">
+        ${shapes.circle(40, 40, 24)}
+      </g>
+      <g transform="translate(110,10)">
+        ${shapes.circle(40, 40, 24)}${shapes.rect(28, 28, 24, 24)}
+      </g>
+      <g transform="translate(210,10)">
+        ${shapes.circle(40, 40, 24)}${shapes.rect(28, 28, 24, 24)}${shapes.triangle(40, 40, 20, "#333")}
+      </g>
+      ${qmark(350, 50)}
+    </svg><br/>Each step adds a shape inside: circle → circle+square → circle+square+filled triangle. What comes next?`,
+    options: [
+      { label: "A", text: "Circle + square + filled triangle + filled diamond" },
+      { label: "B", text: "Circle + square + filled triangle + circle" },
+      { label: "C", text: "Circle + square only" },
+      { label: "D", text: "Circle + filled triangle + diamond" },
+    ],
+    correctLabel: "A", tags: ["next-in-series"],
+  },
 ];
