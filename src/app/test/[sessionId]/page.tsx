@@ -151,13 +151,12 @@ export default function TestRunnerPage() {
         </div>
       </div>
 
-      {/* Question Progress Dots */}
+      {/* Question Progress Dots (non-clickable, forward-only like real CCAT) */}
       <div className="bg-white border-b border-gray-100 px-4 py-2 flex flex-wrap gap-1 justify-center">
         {session.questions.map((q, i) => (
-          <button
+          <div
             key={q.instanceId}
-            onClick={() => setCurrentIndex(i)}
-            className={`w-6 h-6 rounded-full text-xs font-medium transition-colors ${
+            className={`w-6 h-6 rounded-full text-xs font-medium flex items-center justify-center ${
               i === currentIndex
                 ? "bg-indigo-600 text-white"
                 : answers[q.questionId]
@@ -166,7 +165,7 @@ export default function TestRunnerPage() {
             }`}
           >
             {i + 1}
-          </button>
+          </div>
         ))}
       </div>
 
