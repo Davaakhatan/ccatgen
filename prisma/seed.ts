@@ -1,10 +1,8 @@
 import "dotenv/config";
 import { PrismaClient } from "../src/generated/prisma/client";
-import { PrismaPg } from "@prisma/adapter-pg";
-import { Pool } from "pg";
+import { PrismaNeon } from "@prisma/adapter-neon";
 
-const pool = new Pool({ connectionString: process.env.DIRECT_DATABASE_URL });
-const adapter = new PrismaPg(pool);
+const adapter = new PrismaNeon({ connectionString: process.env.DATABASE_URL! });
 const prisma = new PrismaClient({ adapter });
 
 type QuestionData = {
@@ -95,43 +93,9 @@ const mathLogicQuestions: QuestionData[] = [
 ];
 
 // ---------------------------------------------------------------------------
-// SPATIAL REASONING QUESTIONS (30)
+// SPATIAL REASONING QUESTIONS (30) — imported from separate file with SVG visuals
 // ---------------------------------------------------------------------------
-const spatialQuestions: QuestionData[] = [
-  // Easy (9)
-  { category: "spatial", difficulty: 1, stem: "What comes next in the pattern? □ ■ □ ■ □ ___", options: [{ label: "A", text: "□" }, { label: "B", text: "■" }, { label: "C", text: "△" }, { label: "D", text: "○" }], correctLabel: "B", tags: ["pattern-continuation"] },
-  { category: "spatial", difficulty: 1, stem: "If you rotate the letter 'b' 180 degrees, which letter does it resemble?", options: [{ label: "A", text: "d" }, { label: "B", text: "p" }, { label: "C", text: "q" }, { label: "D", text: "g" }], correctLabel: "C", tags: ["rotation"] },
-  { category: "spatial", difficulty: 1, stem: "How many sides does a hexagon have?", options: [{ label: "A", text: "5" }, { label: "B", text: "6" }, { label: "C", text: "7" }, { label: "D", text: "8" }], correctLabel: "B", tags: ["shape-knowledge"] },
-  { category: "spatial", difficulty: 1, stem: "What comes next? △ △ ○ △ △ ○ △ △ ___", options: [{ label: "A", text: "△" }, { label: "B", text: "○" }, { label: "C", text: "□" }, { label: "D", text: "■" }], correctLabel: "B", tags: ["pattern-continuation"] },
-  { category: "spatial", difficulty: 1, stem: "If you look at 'd' in a mirror, which letter does it resemble?", options: [{ label: "A", text: "b" }, { label: "B", text: "p" }, { label: "C", text: "q" }, { label: "D", text: "a" }], correctLabel: "A", tags: ["mirror"] },
-  { category: "spatial", difficulty: 1, stem: "What comes next? ↑ → ↓ ← ↑ → ↓ ___", options: [{ label: "A", text: "↑" }, { label: "B", text: "→" }, { label: "C", text: "↓" }, { label: "D", text: "←" }], correctLabel: "D", tags: ["pattern-continuation"] },
-  { category: "spatial", difficulty: 1, stem: "If you fold a square piece of paper in half diagonally, what shape do you get?", options: [{ label: "A", text: "Rectangle" }, { label: "B", text: "Triangle" }, { label: "C", text: "Pentagon" }, { label: "D", text: "Trapezoid" }], correctLabel: "B", tags: ["spatial-manipulation"] },
-  { category: "spatial", difficulty: 1, stem: "Which shape has all sides equal and all angles equal to 90°?", options: [{ label: "A", text: "Rectangle" }, { label: "B", text: "Rhombus" }, { label: "C", text: "Square" }, { label: "D", text: "Parallelogram" }], correctLabel: "C", tags: ["shape-knowledge"] },
-  { category: "spatial", difficulty: 1, stem: "How many triangles are in a Star of David (hexagram)?", options: [{ label: "A", text: "2" }, { label: "B", text: "6" }, { label: "C", text: "8" }, { label: "D", text: "12" }], correctLabel: "C", tags: ["shape-counting"] },
-  // Medium (15)
-  { category: "spatial", difficulty: 2, stem: "In a 3×3 grid, top row: ○ ○ △. Middle row: ○ △ △. What should the bottom-left cell be?", options: [{ label: "A", text: "○" }, { label: "B", text: "△" }, { label: "C", text: "□" }, { label: "D", text: "■" }], correctLabel: "B", tags: ["matrix-pattern"] },
-  { category: "spatial", difficulty: 2, stem: "A cube has 6 faces, 12 edges. How many vertices does it have?", options: [{ label: "A", text: "4" }, { label: "B", text: "6" }, { label: "C", text: "8" }, { label: "D", text: "10" }], correctLabel: "C", tags: ["shape-knowledge"] },
-  { category: "spatial", difficulty: 2, stem: "If you rotate the letter 'N' 90° clockwise, which letter does it resemble?", options: [{ label: "A", text: "Z" }, { label: "B", text: "M" }, { label: "C", text: "U" }, { label: "D", text: "S" }], correctLabel: "A", tags: ["rotation"] },
-  { category: "spatial", difficulty: 2, stem: "What comes next? ● ●● ●●● ●●●● ___", options: [{ label: "A", text: "●●●" }, { label: "B", text: "●●●●●" }, { label: "C", text: "●●●●●●" }, { label: "D", text: "●●" }], correctLabel: "B", tags: ["pattern-continuation"] },
-  { category: "spatial", difficulty: 2, stem: "A cross-shaped net (center square + 4 sides) folds into which 3D shape?", options: [{ label: "A", text: "Open-top cube (5 faces)" }, { label: "B", text: "Complete cube" }, { label: "C", text: "Triangular prism" }, { label: "D", text: "Pyramid" }], correctLabel: "A", tags: ["spatial-manipulation"] },
-  { category: "spatial", difficulty: 2, stem: "Triangle (3), Square (4), Pentagon (5). What comes next?", options: [{ label: "A", text: "Circle" }, { label: "B", text: "Hexagon (6)" }, { label: "C", text: "Octagon (8)" }, { label: "D", text: "Star" }], correctLabel: "B", tags: ["pattern-continuation"] },
-  { category: "spatial", difficulty: 2, stem: "How many rectangles (including squares) are in a 2×3 grid?", options: [{ label: "A", text: "12" }, { label: "B", text: "15" }, { label: "C", text: "18" }, { label: "D", text: "21" }], correctLabel: "C", tags: ["shape-counting"] },
-  { category: "spatial", difficulty: 2, stem: "Row 1: ★☆☆, Row 2: ☆★☆, Row 3: ___. Where does ★ appear in Row 3?", options: [{ label: "A", text: "First position" }, { label: "B", text: "Third position" }, { label: "C", text: "Second position" }, { label: "D", text: "First and second" }], correctLabel: "B", tags: ["matrix-pattern"] },
-  { category: "spatial", difficulty: 2, stem: "If a shape is reflected across a vertical axis, which property changes?", options: [{ label: "A", text: "Area" }, { label: "B", text: "Left-right orientation" }, { label: "C", text: "Number of sides" }, { label: "D", text: "Perimeter" }], correctLabel: "B", tags: ["mirror"] },
-  { category: "spatial", difficulty: 2, stem: "A pyramid with a square base has how many faces total?", options: [{ label: "A", text: "4" }, { label: "B", text: "5" }, { label: "C", text: "6" }, { label: "D", text: "8" }], correctLabel: "B", tags: ["shape-knowledge"] },
-  { category: "spatial", difficulty: 2, stem: "What comes next? □ □△ □△○ □△○☆ ___", options: [{ label: "A", text: "□△○☆■" }, { label: "B", text: "□△○" }, { label: "C", text: "□□△" }, { label: "D", text: "☆○△□" }], correctLabel: "A", tags: ["pattern-continuation"] },
-  { category: "spatial", difficulty: 2, stem: "If you rotate → by 270° clockwise, which direction does it point?", options: [{ label: "A", text: "Up ↑" }, { label: "B", text: "Down ↓" }, { label: "C", text: "Left ←" }, { label: "D", text: "Right →" }], correctLabel: "B", tags: ["rotation"] },
-  { category: "spatial", difficulty: 2, stem: "In a 3×3 grid, diagonal from top-left to bottom-right is ■. All others are □. How many ■ cells?", options: [{ label: "A", text: "2" }, { label: "B", text: "3" }, { label: "C", text: "4" }, { label: "D", text: "5" }], correctLabel: "B", tags: ["matrix-pattern"] },
-  { category: "spatial", difficulty: 2, stem: "Mirror the word 'TOT' along its right side. What does it look like?", options: [{ label: "A", text: "TOT" }, { label: "B", text: "TOD" }, { label: "C", text: "DOT" }, { label: "D", text: "OTO" }], correctLabel: "A", tags: ["mirror"] },
-  { category: "spatial", difficulty: 2, stem: "A regular octagon has how many lines of symmetry?", options: [{ label: "A", text: "4" }, { label: "B", text: "6" }, { label: "C", text: "8" }, { label: "D", text: "10" }], correctLabel: "C", tags: ["shape-knowledge"] },
-  // Hard (6)
-  { category: "spatial", difficulty: 3, stem: "3×3 matrix: Row 1 shapes increase sides (△,□,⬠). Row 2 same but filled. Row 3 same but dotted. What is Row 3, Column 2?", options: [{ label: "A", text: "Dotted triangle" }, { label: "B", text: "Dotted square" }, { label: "C", text: "Dotted pentagon" }, { label: "D", text: "Dotted circle" }], correctLabel: "B", tags: ["matrix-pattern"] },
-  { category: "spatial", difficulty: 3, stem: "A die has opposite faces summing to 7. Top shows 3, front shows 2. What is on the bottom?", options: [{ label: "A", text: "1" }, { label: "B", text: "4" }, { label: "C", text: "5" }, { label: "D", text: "6" }], correctLabel: "B", tags: ["spatial-manipulation"] },
-  { category: "spatial", difficulty: 3, stem: "Alternate transformations: rotate 90° CW then reflect horizontally. Starting with 'L' pointing up-right, after both transforms the shape is:", options: [{ label: "A", text: "Same as original" }, { label: "B", text: "Down-right" }, { label: "C", text: "Down-left" }, { label: "D", text: "Up-left" }], correctLabel: "A", tags: ["rotation", "mirror"] },
-  { category: "spatial", difficulty: 3, stem: "How many unit cubes are needed for a 3×3×3 cube with the entire center column removed?", options: [{ label: "A", text: "24" }, { label: "B", text: "25" }, { label: "C", text: "26" }, { label: "D", text: "23" }], correctLabel: "A", tags: ["shape-counting"] },
-  { category: "spatial", difficulty: 3, stem: "4×4 grid rule: each row and column has one ★ and one ▲. Row 1: ★ col1, ▲ col3. Row 2: ★ col3, ▲ col4. Row 3: ▲ col1. Where must ★ be in Row 3?", options: [{ label: "A", text: "Column 2" }, { label: "B", text: "Column 3" }, { label: "C", text: "Column 4" }, { label: "D", text: "Column 1" }], correctLabel: "C", tags: ["matrix-pattern"] },
-  { category: "spatial", difficulty: 3, stem: "A plus/cross shape (5 unit squares) is rotated 45°. What is the approximate width of the bounding box?", options: [{ label: "A", text: "3 units" }, { label: "B", text: "3√2 ≈ 4.24 units" }, { label: "C", text: "5 units" }, { label: "D", text: "2√2 ≈ 2.83 units" }], correctLabel: "B", tags: ["rotation", "spatial-manipulation"] },
-];
+import { spatialQuestions } from "./spatial-questions";
 
 // ---------------------------------------------------------------------------
 // SEED FUNCTION

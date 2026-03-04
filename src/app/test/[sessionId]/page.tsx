@@ -179,13 +179,18 @@ export default function TestRunnerPage() {
                 {question.category.replace("_", " & ")}
               </span>
             </div>
-            <h2 className="text-lg font-medium text-gray-900 mb-6 whitespace-pre-wrap">
-              {question.stem}
-            </h2>
+            {question.category === "spatial" && question.stem.includes("<svg") ? (
+              <div className="text-lg font-medium text-gray-900 mb-6" dangerouslySetInnerHTML={{ __html: question.stem }} />
+            ) : (
+              <h2 className="text-lg font-medium text-gray-900 mb-6 whitespace-pre-wrap">
+                {question.stem}
+              </h2>
+            )}
 
             <div className="space-y-3">
               {question.options.map((option) => {
                 const isSelected = answers[question.questionId] === option.id;
+                const isSvgOption = option.text.includes("<svg");
                 return (
                   <button
                     key={option.id}
@@ -197,7 +202,11 @@ export default function TestRunnerPage() {
                     }`}
                   >
                     <span className="font-medium mr-3">{option.label}.</span>
-                    {option.text}
+                    {isSvgOption ? (
+                      <span className="inline-block align-middle" dangerouslySetInnerHTML={{ __html: option.text }} />
+                    ) : (
+                      option.text
+                    )}
                   </button>
                 );
               })}
@@ -205,20 +214,13 @@ export default function TestRunnerPage() {
           </div>
 
           {/* Navigation */}
-          <div className="flex justify-between">
-            <button
-              onClick={() => setCurrentIndex((i) => Math.max(0, i - 1))}
-              disabled={currentIndex === 0}
-              className="px-6 py-2 rounded-lg border border-gray-300 text-gray-700 font-medium hover:bg-gray-50 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
-            >
-              Previous
-            </button>
+          <div className="flex justify-end">
             <button
               onClick={() => setCurrentIndex((i) => Math.min(session.questions.length - 1, i + 1))}
               disabled={currentIndex === session.questions.length - 1}
               className="px-6 py-2 rounded-lg bg-indigo-600 text-white font-medium hover:bg-indigo-700 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
             >
-              {answers[question.questionId] ? "Next" : "Skip"}
+              Next
             </button>
           </div>
         </div>
