@@ -32,12 +32,20 @@ export default function Home() {
           <p>Verbal &bull; Math & Logic &bull; Spatial Reasoning</p>
         </div>
 
-        <Link
-          href="/test/instructions"
-          className="inline-block bg-indigo-600 text-white px-8 py-3 rounded-lg font-medium hover:bg-indigo-700 transition-colors"
-        >
-          Start Test
-        </Link>
+        <div className="flex flex-col gap-3 items-center">
+          <Link
+            href="/test/instructions"
+            className="inline-block bg-indigo-600 text-white px-8 py-3 rounded-lg font-medium hover:bg-indigo-700 transition-colors"
+          >
+            Start Test
+          </Link>
+          <Link
+            href="/test/results"
+            className="inline-block text-indigo-600 hover:text-indigo-800 text-sm font-medium transition-colors"
+          >
+            View Recent Results
+          </Link>
+        </div>
 
         <p className="text-xs text-gray-400">
           This is not an official CCAT product. For practice purposes only.
