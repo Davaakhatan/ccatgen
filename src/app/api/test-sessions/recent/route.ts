@@ -12,7 +12,7 @@ function getPercentileBand(rawScore: number): string {
 export async function GET() {
   try {
     const sessions = await prisma.testSession.findMany({
-      where: { status: "finished" },
+      where: { status: { in: ["completed", "expired"] } },
       orderBy: { startedAt: "desc" },
       take: 10,
       include: {
