@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { Category } from "@/generated/prisma/client";
 
@@ -11,10 +12,20 @@ function getPercentileBand(rawScore: number): string {
 
 export async function GET() {
   try {
+    const session = await auth();
+    const userId = session?.user?.id;
+
+    if (!userId) {
+      return NextResponse.json([]);
+    }
+
     const sessions = await prisma.testSession.findMany({
-      where: { status: { in: ["completed", "expired"] } },
+      where: {
+        userId,
+        status: { in: ["completed", "expired"] },
+      },
       orderBy: { startedAt: "desc" },
-      take: 10,
+      take: 20,
       include: {
         questions: {
           include: {
