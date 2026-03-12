@@ -18,6 +18,7 @@ import { spatialQuestionsExtra } from "./questions-spatial-extra";
 import { verbalQuestions2 } from "./questions-verbal-2";
 import { mathLogicQuestions2 } from "./questions-math-2";
 import { spatialQuestions2 } from "./questions-spatial-2";
+import { additionalQuestions } from "./questions-additional";
 
 // ---------------------------------------------------------------------------
 // SEED FUNCTION
@@ -40,6 +41,7 @@ async function main() {
     ...verbalQuestions2,
     ...mathLogicQuestions2,
     ...spatialQuestions2,
+    ...additionalQuestions,
   ];
   console.log(`  Seeding ${allQuestions.length} questions...`);
 
@@ -85,12 +87,12 @@ async function main() {
   const math = await prisma.question.count({ where: { category: "math_logic" } });
   const spatial = await prisma.question.count({ where: { category: "spatial" } });
 
-  console.log(`\nSummary:`);
-  console.log(`  Verbal:     ${verbal} (need 360 for 20 tests)`);
-  console.log(`  Math&Logic: ${math} (need 360 for 20 tests)`);
-  console.log(`  Spatial:    ${spatial} (need 280 for 20 tests)`);
+  console.log(`\nSummary (CCAT format: 18 verbal + 21 math + 11 spatial = 50):`);
+  console.log(`  Verbal:     ${verbal} (need ${18 * 20} for 20 tests)`);
+  console.log(`  Math&Logic: ${math} (need ${21 * 20} for 20 tests)`);
+  console.log(`  Spatial:    ${spatial} (need ${11 * 20} for 20 tests)`);
   console.log(`  Total:      ${verbal + math + spatial}`);
-  console.log(`  Full unique tests possible: ${Math.min(Math.floor(verbal / 18), Math.floor(math / 18), Math.floor(spatial / 14))}`);
+  console.log(`  Full unique tests possible: ${Math.min(Math.floor(verbal / 18), Math.floor(math / 21), Math.floor(spatial / 11))}`);
 }
 
 main()

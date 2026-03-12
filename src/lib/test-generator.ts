@@ -3,8 +3,8 @@ import { Category } from "@/generated/prisma/client";
 
 const CATEGORY_DISTRIBUTIONS: { category: Category; total: number }[] = [
   { category: "verbal", total: 18 },
-  { category: "math_logic", total: 18 },
-  { category: "spatial", total: 14 },
+  { category: "math_logic", total: 21 },
+  { category: "spatial", total: 11 },
 ];
 
 const TEST_DURATION_MINUTES = 15;
