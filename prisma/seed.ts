@@ -15,6 +15,9 @@ import { verbalQuestions } from "./questions-verbal";
 import { mathLogicQuestions } from "./questions-math";
 import { spatialQuestions } from "./spatial-questions";
 import { spatialQuestionsExtra } from "./questions-spatial-extra";
+import { verbalQuestions2 } from "./questions-verbal-2";
+import { mathLogicQuestions2 } from "./questions-math-2";
+import { spatialQuestions2 } from "./questions-spatial-2";
 
 // ---------------------------------------------------------------------------
 // SEED FUNCTION
@@ -34,6 +37,9 @@ async function main() {
     ...mathLogicQuestions,
     ...spatialQuestions,
     ...spatialQuestionsExtra,
+    ...verbalQuestions2,
+    ...mathLogicQuestions2,
+    ...spatialQuestions2,
   ];
   console.log(`  Seeding ${allQuestions.length} questions...`);
 
@@ -80,9 +86,9 @@ async function main() {
   const spatial = await prisma.question.count({ where: { category: "spatial" } });
 
   console.log(`\nSummary:`);
-  console.log(`  Verbal:     ${verbal} (need 180 for 10 tests)`);
-  console.log(`  Math&Logic: ${math} (need 180 for 10 tests)`);
-  console.log(`  Spatial:    ${spatial} (need 140 for 10 tests)`);
+  console.log(`  Verbal:     ${verbal} (need 360 for 20 tests)`);
+  console.log(`  Math&Logic: ${math} (need 360 for 20 tests)`);
+  console.log(`  Spatial:    ${spatial} (need 280 for 20 tests)`);
   console.log(`  Total:      ${verbal + math + spatial}`);
   console.log(`  Full unique tests possible: ${Math.min(Math.floor(verbal / 18), Math.floor(math / 18), Math.floor(spatial / 14))}`);
 }
