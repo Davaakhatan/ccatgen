@@ -20,44 +20,56 @@ export default function InstructionsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-900 flex items-center justify-center p-4">
-      <div className="max-w-lg w-full bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-8 space-y-6">
-        <div>
-          <h1 className="text-2xl font-bold text-white">Test Instructions</h1>
-          <p className="text-slate-400 text-sm mt-1">Read carefully before starting</p>
+    <div className="min-h-screen bg-slate-50 p-4 text-slate-950 sm:p-6">
+      <div className="mx-auto max-w-3xl space-y-5">
+        <div className="rounded-lg border border-slate-200 bg-white p-6 shadow-sm">
+          <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">Timed practice</p>
+          <h1 className="mt-2 text-2xl font-bold">Test Instructions</h1>
+          <p className="mt-2 text-sm leading-6 text-slate-600">
+            You will answer a mixed set of verbal, math/logic, and spatial questions under a 15-minute timer.
+          </p>
         </div>
 
-        <ul className="space-y-3 text-slate-300">
-          <li className="flex items-start gap-3">
-            <span className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-indigo-600 text-white text-xs font-bold shrink-0 mt-0.5">1</span>
-            You will have <strong className="text-white">15 minutes</strong> to complete 50 questions.
-          </li>
-          <li className="flex items-start gap-3">
-            <span className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-indigo-600 text-white text-xs font-bold shrink-0 mt-0.5">2</span>
-            Most people do <strong className="text-white">not</strong> finish all questions — this is normal.
-          </li>
-          <li className="flex items-start gap-3">
-            <span className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-indigo-600 text-white text-xs font-bold shrink-0 mt-0.5">3</span>
-            Questions are <strong className="text-white">forward-only</strong> — you cannot go back to previous questions.
-          </li>
-          <li className="flex items-start gap-3">
-            <span className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-indigo-600 text-white text-xs font-bold shrink-0 mt-0.5">4</span>
-            <strong className="text-white">No calculators</strong> are allowed.
-          </li>
-          <li className="flex items-start gap-3">
-            <span className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-indigo-600 text-white text-xs font-bold shrink-0 mt-0.5">5</span>
-            The test will <strong className="text-white">auto-submit</strong> when time runs out.
-          </li>
-        </ul>
+        <div className="grid gap-4 sm:grid-cols-3">
+          <div className="rounded-lg border border-slate-200 bg-white p-4 shadow-sm">
+            <div className="text-2xl font-bold">50</div>
+            <div className="mt-1 text-sm text-slate-500">Questions</div>
+          </div>
+          <div className="rounded-lg border border-slate-200 bg-white p-4 shadow-sm">
+            <div className="text-2xl font-bold">15:00</div>
+            <div className="mt-1 text-sm text-slate-500">Time limit</div>
+          </div>
+          <div className="rounded-lg border border-slate-200 bg-white p-4 shadow-sm">
+            <div className="text-2xl font-bold">0</div>
+            <div className="mt-1 text-sm text-slate-500">Calculator use</div>
+          </div>
+        </div>
 
-        <div className="bg-amber-500/10 border border-amber-500/20 rounded-xl p-4 text-sm text-amber-300">
-          Work quickly but carefully. Unanswered questions count as incorrect.
+        <div className="rounded-lg border border-slate-200 bg-white p-5 shadow-sm">
+          <ul className="space-y-3 text-sm leading-6 text-slate-700">
+            <li className="flex gap-3">
+              <span className="mt-2 h-2 w-2 shrink-0 rounded-full bg-slate-900" />
+              Most candidates will not finish every question; speed matters.
+            </li>
+            <li className="flex gap-3">
+              <span className="mt-2 h-2 w-2 shrink-0 rounded-full bg-slate-900" />
+              You can move backward and forward during practice to review skipped questions.
+            </li>
+            <li className="flex gap-3">
+              <span className="mt-2 h-2 w-2 shrink-0 rounded-full bg-slate-900" />
+              Unanswered questions count as incorrect when the test is submitted.
+            </li>
+            <li className="flex gap-3">
+              <span className="mt-2 h-2 w-2 shrink-0 rounded-full bg-slate-900" />
+              Results are shown immediately with category breakdowns.
+            </li>
+          </ul>
         </div>
 
         <button
           onClick={handleBeginTest}
           disabled={loading}
-          className="w-full bg-indigo-600 text-white py-3.5 rounded-xl font-semibold hover:bg-indigo-500 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+          className="w-full rounded-lg bg-slate-950 py-3.5 font-semibold text-white shadow-sm transition-colors hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-50"
         >
           {loading ? "Generating Test..." : "Begin Test"}
         </button>

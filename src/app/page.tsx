@@ -3,82 +3,78 @@ import UserNav from "@/components/UserNav";
 
 export default function Home() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-900">
-      {/* Nav */}
-      <nav className="flex items-center justify-between px-6 py-4 max-w-5xl mx-auto">
-        <span className="text-lg font-bold text-white tracking-tight">CCAT Practice</span>
+    <div className="min-h-screen bg-slate-50 text-slate-950">
+      <nav className="mx-auto flex max-w-6xl items-center justify-between px-4 py-4 sm:px-6">
+        <span className="text-base font-bold tracking-tight">CCAT Practice</span>
         <UserNav />
       </nav>
 
-      {/* Hero */}
-      <div className="flex items-center justify-center px-4 pt-16 pb-24">
-        <div className="max-w-xl w-full text-center space-y-10">
-          <div className="space-y-4">
-            <div className="inline-flex items-center gap-2 bg-indigo-500/10 border border-indigo-500/20 text-indigo-300 text-sm font-medium px-4 py-1.5 rounded-full">
-              <span className="w-2 h-2 bg-indigo-400 rounded-full animate-pulse" />
-              Crossover CCAT Format
+      <main className="mx-auto grid max-w-6xl gap-8 px-4 pb-12 pt-8 sm:px-6 lg:grid-cols-[1.1fr_0.9fr] lg:items-start">
+        <section className="space-y-8">
+          <div className="space-y-5">
+            <div className="inline-flex items-center rounded-full border border-slate-200 bg-white px-3 py-1 text-xs font-semibold text-slate-600 shadow-sm">
+              50 questions · 15 minutes · no calculator
             </div>
-            <h1 className="text-5xl font-extrabold text-white leading-tight">
-              Cognitive Ability<br />Practice Test
+            <h1 className="max-w-3xl text-4xl font-extrabold leading-tight tracking-tight sm:text-5xl">
+              Timed CCAT-style cognitive practice
             </h1>
-            <p className="text-lg text-slate-400 max-w-md mx-auto">
-              Realistic CCAT-style questions to prepare for cognitive assessments used in hiring
+            <p className="max-w-2xl text-base leading-7 text-slate-600">
+              Practice a tighter mix of verbal reasoning, numerical logic, and spatial pattern questions under realistic time pressure.
             </p>
           </div>
 
-          <div className="grid grid-cols-3 gap-4">
-            <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-5">
-              <div className="text-3xl font-bold text-white">50</div>
-              <div className="text-sm text-slate-400 mt-1">Questions</div>
+          <div className="grid gap-3 sm:grid-cols-3">
+            <div className="rounded-lg border border-slate-200 bg-white p-4 shadow-sm">
+              <div className="text-2xl font-bold">22</div>
+              <div className="mt-1 text-sm text-slate-500">Verbal</div>
             </div>
-            <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-5">
-              <div className="text-3xl font-bold text-white">15</div>
-              <div className="text-sm text-slate-400 mt-1">Minutes</div>
+            <div className="rounded-lg border border-slate-200 bg-white p-4 shadow-sm">
+              <div className="text-2xl font-bold">17</div>
+              <div className="mt-1 text-sm text-slate-500">Math & Logic</div>
             </div>
-            <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-5">
-              <div className="text-3xl font-bold text-white">3</div>
-              <div className="text-sm text-slate-400 mt-1">Categories</div>
+            <div className="rounded-lg border border-slate-200 bg-white p-4 shadow-sm">
+              <div className="text-2xl font-bold">11</div>
+              <div className="mt-1 text-sm text-slate-500">Spatial</div>
             </div>
           </div>
 
-          <div className="flex items-center justify-center gap-6 text-sm text-slate-500">
-            <span className="flex items-center gap-2">
-              <span className="w-2 h-2 rounded-full bg-blue-400" />
-              Verbal
-            </span>
-            <span className="flex items-center gap-2">
-              <span className="w-2 h-2 rounded-full bg-emerald-400" />
-              Math & Logic
-            </span>
-            <span className="flex items-center gap-2">
-              <span className="w-2 h-2 rounded-full bg-violet-400" />
-              Spatial
-            </span>
-          </div>
-
-          <div className="flex flex-col gap-3 items-center">
+          <div className="flex flex-wrap gap-3">
             <Link
               href="/test/instructions"
-              className="inline-flex items-center gap-2 bg-indigo-600 text-white px-10 py-3.5 rounded-xl font-semibold hover:bg-indigo-500 transition-all hover:shadow-lg hover:shadow-indigo-500/25"
+              className="inline-flex items-center justify-center rounded-lg bg-slate-950 px-6 py-3 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-slate-800"
             >
-              Start Test
-              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6" />
-              </svg>
+              Start Practice Test
             </Link>
             <Link
               href="/test/results"
-              className="text-slate-400 hover:text-indigo-300 text-sm font-medium transition-colors"
+              className="inline-flex items-center justify-center rounded-lg border border-slate-200 bg-white px-6 py-3 text-sm font-semibold text-slate-700 shadow-sm transition-colors hover:bg-slate-100"
             >
-              View My Results
+              View Results
             </Link>
           </div>
+        </section>
 
-          <p className="text-xs text-slate-600">
+        <section className="rounded-lg border border-slate-200 bg-white p-5 shadow-sm">
+          <h2 className="text-sm font-semibold uppercase tracking-wide text-slate-500">Practice Mix</h2>
+          <div className="mt-5 space-y-4">
+            <div className="border-l-4 border-blue-500 pl-4">
+              <h3 className="font-semibold">Verbal reasoning</h3>
+              <p className="mt-1 text-sm text-slate-600">Analogies, antonyms, and sentence completion.</p>
+            </div>
+            <div className="border-l-4 border-emerald-500 pl-4">
+              <h3 className="font-semibold">Numerical logic</h3>
+              <p className="mt-1 text-sm text-slate-600">Rates, ratios, data interpretation, sequences, and syllogisms.</p>
+            </div>
+            <div className="border-l-4 border-violet-500 pl-4">
+              <h3 className="font-semibold">Spatial reasoning</h3>
+              <p className="mt-1 text-sm text-slate-600">Visual series, rotations, transformations, and matrix completion.</p>
+            </div>
+          </div>
+          <p className="mt-6 border-t border-slate-100 pt-4 text-xs text-slate-500">
             Not an official CCAT product. For practice purposes only.
           </p>
-        </div>
-      </div>
+        </section>
+      </main>
     </div>
   );
 }

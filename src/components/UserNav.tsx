@@ -11,13 +11,13 @@ export default function UserNav() {
       <div className="flex items-center gap-3">
         <Link
           href="/login"
-          className="text-sm font-medium text-slate-300 hover:text-white transition-colors"
+          className="text-sm font-medium text-slate-600 hover:text-slate-950 transition-colors"
         >
           Sign In
         </Link>
         <Link
           href="/signup"
-          className="text-sm font-medium bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-500 transition-colors"
+          className="text-sm font-medium bg-slate-950 text-white px-4 py-2 rounded-lg hover:bg-slate-800 transition-colors"
         >
           Sign Up
         </Link>
@@ -27,12 +27,12 @@ export default function UserNav() {
 
   return (
     <div className="flex items-center gap-4">
-      <span className="text-sm text-slate-300">
+      <span className="text-sm text-slate-600">
         {session.user.name}
       </span>
       <button
         onClick={() => signOut({ callbackUrl: "/" })}
-        className="text-sm font-medium text-slate-400 hover:text-white transition-colors"
+        className="text-sm font-medium text-slate-600 hover:text-slate-950 transition-colors"
       >
         Sign Out
       </button>
