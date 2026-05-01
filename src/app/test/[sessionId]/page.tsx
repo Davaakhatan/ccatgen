@@ -146,7 +146,7 @@ export default function TestRunnerPage() {
               Q{currentIndex + 1}/{session.questions.length}
             </span>
             <div className="w-24 h-1.5 bg-slate-100 rounded-full overflow-hidden">
-              <div className="h-full bg-indigo-500 rounded-full transition-all duration-300" style={{ width: `${progressPct}%` }} />
+              <div className="h-full bg-blue-600 rounded-full transition-all duration-300" style={{ width: `${progressPct}%` }} />
             </div>
           </div>
         </div>
@@ -168,7 +168,7 @@ export default function TestRunnerPage() {
       {/* Time progress bar */}
       <div className="h-0.5 bg-slate-100">
         <div
-          className={`h-full transition-all duration-1000 ${isLowTime ? "bg-red-500" : "bg-indigo-500"}`}
+          className={`h-full transition-all duration-1000 ${isLowTime ? "bg-red-500" : "bg-blue-600"}`}
           style={{ width: `${timePct}%` }}
         />
       </div>
@@ -183,7 +183,7 @@ export default function TestRunnerPage() {
             onClick={() => setCurrentIndex(i)}
             className={`w-6 h-6 rounded-full text-xs font-medium flex items-center justify-center transition-all ${
               i === currentIndex
-                ? "bg-indigo-600 text-white shadow-sm shadow-indigo-200"
+                ? "bg-slate-950 text-white shadow-sm"
                 : answers[q.questionId]
                 ? "bg-emerald-50 text-emerald-600 border border-emerald-200"
                 : i < currentIndex

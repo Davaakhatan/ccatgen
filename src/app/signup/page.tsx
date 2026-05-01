@@ -54,27 +54,25 @@ export default function SignupPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-900 flex items-center justify-center p-4">
-      <div className="max-w-md w-full">
-        <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-14 h-14 bg-indigo-600 rounded-2xl mb-4">
-            <svg className="w-7 h-7 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
-            </svg>
-          </div>
-          <h1 className="text-2xl font-bold text-white">Create your account</h1>
-          <p className="text-slate-400 mt-1">Start practicing for the CCAT</p>
+    <div className="flex min-h-screen items-center justify-center bg-slate-50 p-4 text-slate-950">
+      <div className="w-full max-w-md">
+        <div className="mb-6">
+          <Link href="/" className="text-sm font-semibold text-slate-600 hover:text-slate-950">
+            CCAT Practice
+          </Link>
+          <h1 className="mt-6 text-2xl font-bold">Create your account</h1>
+          <p className="mt-1 text-sm text-slate-600">Save practice sessions and review results over time.</p>
         </div>
 
-        <form onSubmit={handleSubmit} className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-8 space-y-5">
+        <form onSubmit={handleSubmit} className="space-y-5 rounded-lg border border-slate-200 bg-white p-6 shadow-sm">
           {error && (
-            <div className="bg-red-500/10 border border-red-500/20 text-red-300 text-sm px-4 py-3 rounded-xl">
+            <div className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
               {error}
             </div>
           )}
 
           <div>
-            <label htmlFor="name" className="block text-sm font-medium text-slate-300 mb-2">
+            <label htmlFor="name" className="mb-2 block text-sm font-medium text-slate-700">
               Full Name
             </label>
             <input
@@ -83,13 +81,13 @@ export default function SignupPage() {
               value={name}
               onChange={(e) => setName(e.target.value)}
               required
-              className="w-full bg-white/5 border border-white/10 text-white rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent placeholder-slate-500"
+              className="w-full rounded-lg border border-slate-300 bg-white px-4 py-3 text-slate-950 placeholder-slate-400 focus:border-slate-950 focus:outline-none focus:ring-1 focus:ring-slate-950"
               placeholder="John Doe"
             />
           </div>
 
           <div>
-            <label htmlFor="email" className="block text-sm font-medium text-slate-300 mb-2">
+            <label htmlFor="email" className="mb-2 block text-sm font-medium text-slate-700">
               Email
             </label>
             <input
@@ -98,13 +96,13 @@ export default function SignupPage() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
-              className="w-full bg-white/5 border border-white/10 text-white rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent placeholder-slate-500"
+              className="w-full rounded-lg border border-slate-300 bg-white px-4 py-3 text-slate-950 placeholder-slate-400 focus:border-slate-950 focus:outline-none focus:ring-1 focus:ring-slate-950"
               placeholder="you@example.com"
             />
           </div>
 
           <div>
-            <label htmlFor="password" className="block text-sm font-medium text-slate-300 mb-2">
+            <label htmlFor="password" className="mb-2 block text-sm font-medium text-slate-700">
               Password
             </label>
             <input
@@ -114,7 +112,7 @@ export default function SignupPage() {
               onChange={(e) => setPassword(e.target.value)}
               required
               minLength={6}
-              className="w-full bg-white/5 border border-white/10 text-white rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent placeholder-slate-500"
+              className="w-full rounded-lg border border-slate-300 bg-white px-4 py-3 text-slate-950 placeholder-slate-400 focus:border-slate-950 focus:outline-none focus:ring-1 focus:ring-slate-950"
               placeholder="At least 6 characters"
             />
           </div>
@@ -122,14 +120,14 @@ export default function SignupPage() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-indigo-600 text-white py-3 rounded-xl font-semibold hover:bg-indigo-500 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full rounded-lg bg-slate-950 py-3 font-semibold text-white transition-colors hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-50"
           >
             {loading ? "Creating account..." : "Create Account"}
           </button>
 
-          <p className="text-center text-sm text-slate-400">
+          <p className="text-center text-sm text-slate-600">
             Already have an account?{" "}
-            <Link href="/login" className="text-indigo-400 hover:text-indigo-300 font-medium">
+            <Link href="/login" className="font-medium text-slate-950 hover:underline">
               Sign in
             </Link>
           </p>

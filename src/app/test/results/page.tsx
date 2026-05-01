@@ -17,10 +17,10 @@ type SessionResult = {
 };
 
 const bandColors: Record<string, string> = {
-  "Below Average": "bg-red-500/10 text-red-300 border border-red-500/20",
-  Average: "bg-amber-500/10 text-amber-300 border border-amber-500/20",
-  "Above Average": "bg-emerald-500/10 text-emerald-300 border border-emerald-500/20",
-  Exceptional: "bg-violet-500/10 text-violet-300 border border-violet-500/20",
+  "Below Average": "bg-red-50 text-red-700 border border-red-200",
+  Average: "bg-amber-50 text-amber-700 border border-amber-200",
+  "Above Average": "bg-emerald-50 text-emerald-700 border border-emerald-200",
+  Exceptional: "bg-violet-50 text-violet-700 border border-violet-200",
 };
 
 export default function RecentResultsPage() {
@@ -42,31 +42,34 @@ export default function RecentResultsPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-900 flex items-center justify-center">
-        <p className="text-slate-400">Loading results...</p>
+      <div className="flex min-h-screen items-center justify-center bg-slate-50">
+        <p className="text-slate-500">Loading results...</p>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-900 p-4">
-      <div className="max-w-3xl mx-auto space-y-6 pt-8">
-        <div className="flex items-center justify-between">
-          <h1 className="text-2xl font-bold text-white">My Results</h1>
+    <div className="min-h-screen bg-slate-50 p-4 text-slate-950 sm:p-6">
+      <div className="mx-auto max-w-4xl space-y-6">
+        <div className="flex flex-col gap-3 rounded-lg border border-slate-200 bg-white p-5 shadow-sm sm:flex-row sm:items-center sm:justify-between">
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">History</p>
+            <h1 className="mt-1 text-2xl font-bold">My Results</h1>
+          </div>
           <button
             onClick={() => router.push("/test/instructions")}
-            className="bg-indigo-600 text-white px-4 py-2 rounded-xl text-sm font-semibold hover:bg-indigo-500 transition-colors"
+            className="rounded-lg bg-slate-950 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-slate-800"
           >
             Take New Test
           </button>
         </div>
 
         {results.length === 0 ? (
-          <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-8 text-center">
-            <p className="text-slate-400">No completed tests yet.</p>
+          <div className="rounded-lg border border-slate-200 bg-white p-8 text-center shadow-sm">
+            <p className="text-slate-600">No completed tests yet.</p>
             <button
               onClick={() => router.push("/test/instructions")}
-              className="mt-4 bg-indigo-600 text-white px-6 py-2.5 rounded-xl font-semibold hover:bg-indigo-500 transition-colors"
+              className="mt-4 rounded-lg bg-slate-950 px-6 py-2.5 font-semibold text-white transition-colors hover:bg-slate-800"
             >
               Take Your First Test
             </button>
@@ -80,41 +83,41 @@ export default function RecentResultsPage() {
                 <button
                   key={r.sessionId}
                   onClick={() => router.push(`/test/${r.sessionId}/results`)}
-                  className="w-full bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-5 hover:border-indigo-500/30 hover:bg-white/[0.07] transition-all text-left"
+                  className="w-full rounded-lg border border-slate-200 bg-white p-5 text-left shadow-sm transition-colors hover:border-slate-300 hover:bg-slate-50"
                 >
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-4">
-                      <div className="text-lg font-bold text-slate-600 w-8">#{idx + 1}</div>
+                      <div className="w-8 text-lg font-bold text-slate-300">#{idx + 1}</div>
                       <div>
                         <div className="flex items-center gap-3">
-                          <span className="text-2xl font-bold text-white">{r.rawScore}<span className="text-base text-slate-500">/{r.total}</span></span>
+                          <span className="text-2xl font-bold text-slate-950">{r.rawScore}<span className="text-base text-slate-400">/{r.total}</span></span>
                           <span className={`text-xs font-medium px-2.5 py-1 rounded-full ${bandColors[r.percentileBand] || "bg-slate-500/10 text-slate-300"}`}>
                             {r.percentileBand}
                           </span>
                         </div>
-                        <div className="text-sm text-slate-500 mt-1">
+                        <div className="mt-1 text-sm text-slate-500">
                           {date.toLocaleDateString()} at {date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
                         </div>
                       </div>
                     </div>
-                    <div className="flex gap-4 text-xs text-slate-500 hidden sm:flex">
+                    <div className="hidden gap-4 text-xs text-slate-500 sm:flex">
                       <div className="text-center">
-                        <div className="font-medium text-slate-300">{r.categoryBreakdown.verbal.correct}/{r.categoryBreakdown.verbal.total}</div>
+                        <div className="font-medium text-slate-800">{r.categoryBreakdown.verbal.correct}/{r.categoryBreakdown.verbal.total}</div>
                         <div>Verbal</div>
                       </div>
                       <div className="text-center">
-                        <div className="font-medium text-slate-300">{r.categoryBreakdown.math_logic.correct}/{r.categoryBreakdown.math_logic.total}</div>
+                        <div className="font-medium text-slate-800">{r.categoryBreakdown.math_logic.correct}/{r.categoryBreakdown.math_logic.total}</div>
                         <div>Math</div>
                       </div>
                       <div className="text-center">
-                        <div className="font-medium text-slate-300">{r.categoryBreakdown.spatial.correct}/{r.categoryBreakdown.spatial.total}</div>
+                        <div className="font-medium text-slate-800">{r.categoryBreakdown.spatial.correct}/{r.categoryBreakdown.spatial.total}</div>
                         <div>Spatial</div>
                       </div>
                     </div>
                   </div>
-                  <div className="mt-3 h-1.5 bg-white/5 rounded-full overflow-hidden">
+                  <div className="mt-3 h-1.5 overflow-hidden rounded-full bg-slate-100">
                     <div
-                      className="h-full bg-indigo-500 rounded-full"
+                      className="h-full rounded-full bg-slate-950"
                       style={{ width: `${pct}%` }}
                     />
                   </div>
@@ -126,7 +129,7 @@ export default function RecentResultsPage() {
 
         <button
           onClick={() => router.push("/")}
-          className="w-full border border-white/10 text-slate-400 py-3 rounded-xl font-medium hover:bg-white/5 transition-colors"
+          className="w-full rounded-lg border border-slate-200 bg-white py-3 font-medium text-slate-700 transition-colors hover:bg-slate-100"
         >
           Return Home
         </button>
