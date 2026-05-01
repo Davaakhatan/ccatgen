@@ -28,9 +28,14 @@ export async function GET(
       return NextResponse.json({ error: "Session not found" }, { status: 404 });
     }
 
+    const status = session.status === "active" && new Date() > session.endsAt ? "expired" : session.status;
+    if (status !== session.status) {
+      await prisma.testSession.update({ where: { id: sessionId }, data: { status } });
+    }
+
     return NextResponse.json({
       sessionId: session.id,
-      status: session.status,
+      status,
       startedAt: session.startedAt,
       endsAt: session.endsAt,
       questions: session.questions.map((qi) => ({

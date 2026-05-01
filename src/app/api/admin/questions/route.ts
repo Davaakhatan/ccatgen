@@ -2,6 +2,35 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { Category } from "@/generated/prisma/client";
 
+const VALID_CATEGORIES: Category[] = ["verbal", "math_logic", "spatial"];
+const VALID_DIFFICULTIES = [1, 2, 3];
+
+function isValidQuestionInput(body: {
+  category?: Category;
+  difficulty?: number;
+  stem?: string;
+  options?: { label: string; text: string }[];
+  correctOptionIndex?: number;
+}) {
+  const { category, difficulty, stem, options, correctOptionIndex } = body;
+  return (
+    category &&
+    VALID_CATEGORIES.includes(category) &&
+    typeof difficulty === "number" &&
+    VALID_DIFFICULTIES.includes(difficulty) &&
+    typeof stem === "string" &&
+    stem.trim().length > 0 &&
+    Array.isArray(options) &&
+    options.length >= 2 &&
+    options.every((opt) => typeof opt.label === "string" && opt.label.trim() && typeof opt.text === "string" && opt.text.trim()) &&
+    new Set(options.map((opt) => opt.label)).size === options.length &&
+    typeof correctOptionIndex === "number" &&
+    Number.isInteger(correctOptionIndex) &&
+    correctOptionIndex >= 0 &&
+    correctOptionIndex < options.length
+  );
+}
+
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
@@ -42,7 +71,7 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const { category, difficulty, stem, tags, options, correctOptionIndex } = body;
 
-    if (!category || !difficulty || !stem || !options || options.length !== 4 || correctOptionIndex === undefined) {
+    if (!isValidQuestionInput({ category, difficulty, stem, options, correctOptionIndex })) {
       return NextResponse.json({ error: "Invalid input" }, { status: 400 });
     }
 

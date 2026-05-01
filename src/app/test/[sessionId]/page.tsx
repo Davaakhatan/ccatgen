@@ -173,8 +173,10 @@ export default function TestRunnerPage() {
       {/* Question Progress Dots */}
       <div className="bg-white border-b border-slate-100 px-4 py-2 flex flex-wrap gap-1 justify-center">
         {session.questions.map((q, i) => (
-          <div
+          <button
             key={q.instanceId}
+            type="button"
+            onClick={() => setCurrentIndex(i)}
             className={`w-6 h-6 rounded-full text-xs font-medium flex items-center justify-center transition-all ${
               i === currentIndex
                 ? "bg-indigo-600 text-white shadow-sm shadow-indigo-200"
@@ -186,7 +188,7 @@ export default function TestRunnerPage() {
             }`}
           >
             {i + 1}
-          </div>
+          </button>
         ))}
       </div>
 
@@ -240,7 +242,17 @@ export default function TestRunnerPage() {
           </div>
 
           {/* Navigation */}
-          <div className="flex justify-end">
+          <div className="flex justify-between">
+            <button
+              onClick={() => setCurrentIndex((i) => Math.max(0, i - 1))}
+              disabled={currentIndex === 0}
+              className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl border border-slate-200 bg-white text-slate-700 font-medium hover:bg-slate-50 transition-all disabled:opacity-30 disabled:cursor-not-allowed"
+            >
+              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M11 17l-5-5m0 0l5-5m-5 5h12" />
+              </svg>
+              Previous
+            </button>
             <button
               onClick={() => setCurrentIndex((i) => Math.min(session.questions.length - 1, i + 1))}
               disabled={currentIndex === session.questions.length - 1}

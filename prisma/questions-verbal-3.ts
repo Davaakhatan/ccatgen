@@ -327,7 +327,7 @@ export const verbalQuestions3: QuestionData[] = [
   },
   {
     category: "verbal", difficulty: 2,
-    stem: "If the first two statements are true, is the final statement true?\n\n• No one without a badge can enter the building after 6 PM.\n• It is 8 PM and Carlos is inside the building.\n• Carlos has a badge.",
+    stem: "If the first two statements are true, is the final statement true?\n\n• No one without a badge can enter the building after 6 PM.\n• Carlos entered the building at 8 PM.\n• Carlos has a badge.",
     options: [{ label: "A", text: "True" }, { label: "B", text: "False" }, { label: "C", text: "Uncertain" }],
     correctLabel: "A", tags: ["true-false-uncertain"],
   },

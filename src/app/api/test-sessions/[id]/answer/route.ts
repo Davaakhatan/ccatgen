@@ -30,10 +30,22 @@ export async function POST(
 
     const questionInstance = await prisma.questionInstance.findUnique({
       where: { sessionId_questionId: { sessionId, questionId } },
+      include: {
+        question: {
+          select: {
+            options: { select: { id: true } },
+          },
+        },
+      },
     });
 
     if (!questionInstance) {
       return NextResponse.json({ error: "Question not found in this session" }, { status: 404 });
+    }
+
+    const optionBelongsToQuestion = questionInstance.question.options.some((option) => option.id === selectedOptionId);
+    if (!optionBelongsToQuestion) {
+      return NextResponse.json({ error: "Selected option does not belong to this question" }, { status: 400 });
     }
 
     await prisma.questionInstance.update({

@@ -1,20 +1,14 @@
 import { prisma } from "@/lib/prisma";
 import { Category } from "@/generated/prisma/client";
-
-const CATEGORY_DISTRIBUTIONS: { category: Category; total: number }[] = [
-  { category: "verbal", total: 18 },
-  { category: "math_logic", total: 21 },
-  { category: "spatial", total: 11 },
-];
+import {
+  CCAT_CATEGORY_DISTRIBUTIONS,
+  CCAT_SECTION_BLUEPRINT,
+  CCAT_STYLE_TAGS,
+  ccatStemKey,
+  isCcatStyleQuestion,
+} from "@/lib/ccat-question-policy";
 
 const TEST_DURATION_MINUTES = 15;
-
-function getDifficultyBreakdown(total: number) {
-  const easy = Math.round(total * 0.3);
-  const hard = Math.round(total * 0.2);
-  const medium = total - easy - hard;
-  return { easy, medium, hard };
-}
 
 function shuffle<T>(array: T[]): T[] {
   const shuffled = [...array];
@@ -29,23 +23,95 @@ function sampleRandom<T>(array: T[], count: number): T[] {
   return shuffle(array).slice(0, count);
 }
 
+type CandidateQuestion = {
+  id: string;
+  category: Category;
+  difficulty: number;
+  stem: string;
+  tags: string[];
+  correctOptionId: string;
+  options: { id: string; label: string; text: string }[];
+};
+
+function isRuntimeCcatStyleQuestion(q: CandidateQuestion) {
+  const correctOption = q.options.find((option) => option.id === q.correctOptionId);
+  return isCcatStyleQuestion({
+    category: q.category,
+    stem: q.stem,
+    options: q.options,
+    correctLabel: correctOption?.label,
+    difficulty: q.difficulty,
+    tags: q.tags,
+  });
+}
+
+async function getEligibleCandidates(category: Category, tags: string[]) {
+  const candidates = await prisma.question.findMany({
+    where: {
+      category,
+      tags: { hasSome: tags },
+    },
+    select: {
+      id: true,
+      category: true,
+      difficulty: true,
+      stem: true,
+      tags: true,
+      correctOptionId: true,
+      options: { select: { id: true, label: true, text: true } },
+    },
+  });
+
+  return candidates.filter(isRuntimeCcatStyleQuestion);
+}
+
 export async function generateTest(userId?: string) {
   const selectedQuestionIds: string[] = [];
+  const selectedIds = new Set<string>();
+  const selectedStemKeys = new Set<string>();
+  const selectedCategoryCounts: Record<Category, number> = {
+    verbal: 0,
+    math_logic: 0,
+    spatial: 0,
+  };
 
-  for (const { category, total } of CATEGORY_DISTRIBUTIONS) {
-    const { easy, medium, hard } = getDifficultyBreakdown(total);
+  for (const section of CCAT_SECTION_BLUEPRINT) {
+    const candidates = await getEligibleCandidates(section.category, [...section.tags]);
+    const available = candidates.filter((q) => !selectedIds.has(q.id) && !selectedStemKeys.has(ccatStemKey(q)));
+    const selected = sampleRandom(available, section.total);
 
-    const [easyQs, mediumQs, hardQs] = await Promise.all([
-      prisma.question.findMany({ where: { category, difficulty: 1 }, select: { id: true } }),
-      prisma.question.findMany({ where: { category, difficulty: 2 }, select: { id: true } }),
-      prisma.question.findMany({ where: { category, difficulty: 3 }, select: { id: true } }),
-    ]);
+    if (selected.length < section.total) {
+      throw new Error(`Not enough ${section.category} questions for CCAT section ${section.tags.join("/")}: need ${section.total}, found ${available.length}`);
+    }
 
-    selectedQuestionIds.push(
-      ...sampleRandom(easyQs, easy).map((q) => q.id),
-      ...sampleRandom(mediumQs, medium).map((q) => q.id),
-      ...sampleRandom(hardQs, hard).map((q) => q.id)
+    for (const q of selected) {
+      selectedQuestionIds.push(q.id);
+      selectedIds.add(q.id);
+      selectedStemKeys.add(ccatStemKey(q));
+      selectedCategoryCounts[q.category] += 1;
+    }
+  }
+
+  for (const { category, total } of CCAT_CATEGORY_DISTRIBUTIONS) {
+    const missing = total - selectedCategoryCounts[category];
+    if (missing <= 0) continue;
+
+    const candidates = await getEligibleCandidates(category, [...CCAT_STYLE_TAGS[category]]);
+    const filler = sampleRandom(
+      candidates.filter((q) => !selectedIds.has(q.id) && !selectedStemKeys.has(ccatStemKey(q))),
+      missing
     );
+
+    if (filler.length < missing) {
+      throw new Error(`Not enough ${category} CCAT-style questions to generate a test: need ${total}, found ${selectedCategoryCounts[category] + filler.length}`);
+    }
+
+    for (const q of filler) {
+      selectedQuestionIds.push(q.id);
+      selectedIds.add(q.id);
+      selectedStemKeys.add(ccatStemKey(q));
+      selectedCategoryCounts[q.category] += 1;
+    }
   }
 
   const shuffledIds = shuffle(selectedQuestionIds);

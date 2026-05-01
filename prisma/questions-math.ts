@@ -1406,7 +1406,7 @@ export const mathLogicQuestions: QuestionData[] = [
       { label: "D", text: "7 hours 30 minutes" },
       { label: "E", text: "8 hours" },
     ],
-    correctLabel: "B",
+    correctLabel: "D",
     tags: ["word-problem"],
   },
   {
@@ -1686,7 +1686,7 @@ export const mathLogicQuestions: QuestionData[] = [
       { label: "D", text: "40 liters" },
       { label: "E", text: "48 liters" },
     ],
-    correctLabel: "B",
+    correctLabel: "D",
     tags: ["word-problem"],
   },
   {
@@ -2288,7 +2288,7 @@ export const mathLogicQuestions: QuestionData[] = [
   {
     category: "math_logic",
     difficulty: 3,
-    stem: "Four people — Ana, Ben, Cleo, and Dan — each have a different profession: doctor, lawyer, teacher, engineer. Ana is not the doctor or lawyer. Ben is not the teacher. Cleo is the doctor. What is Dan's profession?",
+    stem: "Four people — Ana, Ben, Cleo, and Dan — each have a different profession: doctor, lawyer, teacher, engineer. Ana is not the doctor or lawyer. Ben is the engineer. Cleo is the doctor. What is Dan's profession?",
     options: [
       { label: "A", text: "Doctor" },
       { label: "B", text: "Lawyer" },
@@ -2310,7 +2310,7 @@ export const mathLogicQuestions: QuestionData[] = [
       { label: "D", text: "Either A or C" },
       { label: "E", text: "Cannot be determined" },
     ],
-    correctLabel: "A",
+    correctLabel: "C",
     tags: ["logical-deduction"],
   },
   {

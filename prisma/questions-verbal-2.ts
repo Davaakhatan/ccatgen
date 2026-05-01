@@ -497,10 +497,10 @@ export const verbalQuestions2: QuestionData[] = [
   {
     category: "verbal",
     difficulty: 2,
-    stem: "COCOON is to BUTTERFLY as CHRYSALIS is to ___.",
+    stem: "COCOON is to MOTH as CHRYSALIS is to ___.",
     options: [
       { label: "A", text: "Caterpillar" },
-      { label: "B", text: "Moth" },
+      { label: "B", text: "Butterfly" },
       { label: "C", text: "Larva" },
       { label: "D", text: "Beetle" },
       { label: "E", text: "Pupa" },

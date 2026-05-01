@@ -3,12 +3,32 @@ import { PrismaClient } from "../src/generated/prisma/client";
 import { PrismaNeon } from "@prisma/adapter-neon";
 import { neonConfig } from "@neondatabase/serverless";
 import ws from "ws";
+import { ccatStemKey, isCcatStyleQuestion, type CcatQuestionLike } from "../src/lib/ccat-question-policy";
 
 // Required for Node.js — Neon serverless driver needs WebSocket
 neonConfig.webSocketConstructor = ws;
 
 const adapter = new PrismaNeon({ connectionString: process.env.DIRECT_DATABASE_URL! });
 const prisma = new PrismaClient({ adapter });
+
+type SeedQuestion = CcatQuestionLike & {
+  difficulty: number;
+  correctLabel: string;
+};
+
+function dedupeByStem(questions: SeedQuestion[]) {
+  const seen = new Set<string>();
+  const unique: SeedQuestion[] = [];
+
+  for (const q of questions) {
+    const key = ccatStemKey(q);
+    if (seen.has(key)) continue;
+    seen.add(key);
+    unique.push(q);
+  }
+
+  return unique;
+}
 
 // Import question banks
 import { verbalQuestions } from "./questions-verbal";
@@ -22,6 +42,11 @@ import { additionalQuestions } from "./questions-additional";
 import { verbalQuestions3 } from "./questions-verbal-3";
 import { mathLogicQuestions3 } from "./questions-math-3";
 import { spatialQuestions3 } from "./questions-spatial-3";
+import { verbalQuestions4 } from "./questions-verbal-4";
+import { mathLogicQuestions4 } from "./questions-math-4";
+import { spatialQuestions4 } from "./questions-spatial-4";
+import { verbalQuestions5 } from "./questions-verbal-5";
+import { mathLogicQuestions5 } from "./questions-math-5";
 
 // ---------------------------------------------------------------------------
 // SEED FUNCTION
@@ -36,7 +61,7 @@ async function main() {
   await prisma.question.deleteMany();
   console.log("  Existing data cleared.");
 
-  const allQuestions = [
+  const rawQuestions: SeedQuestion[] = [
     ...verbalQuestions,
     ...mathLogicQuestions,
     ...spatialQuestions,
@@ -48,7 +73,14 @@ async function main() {
     ...verbalQuestions3,
     ...mathLogicQuestions3,
     ...spatialQuestions3,
+    ...verbalQuestions4,
+    ...mathLogicQuestions4,
+    ...spatialQuestions4,
+    ...verbalQuestions5,
+    ...mathLogicQuestions5,
   ];
+  const allQuestions = dedupeByStem(rawQuestions.filter(isCcatStyleQuestion));
+  console.log(`  Filtered out ${rawQuestions.length - allQuestions.length} duplicate or non-CCAT-style questions.`);
   console.log(`  Seeding ${allQuestions.length} questions...`);
 
   let count = 0;
@@ -94,11 +126,12 @@ async function main() {
   const spatial = await prisma.question.count({ where: { category: "spatial" } });
 
   console.log(`\nSummary (CCAT format: 18 verbal + 21 math + 11 spatial = 50):`);
-  console.log(`  Verbal:     ${verbal} (need ${18 * 30} for 30 tests)`);
-  console.log(`  Math&Logic: ${math} (need ${21 * 30} for 30 tests)`);
-  console.log(`  Spatial:    ${spatial} (need ${11 * 30} for 30 tests)`);
+  console.log(`  Verbal:     ${verbal} (need ${18 * 40} for 40 tests)`);
+  console.log(`  Math&Logic: ${math} (need ${21 * 40} for 40 tests)`);
+  console.log(`  Spatial:    ${spatial} (need ${11 * 40} for 40 tests)`);
   console.log(`  Total:      ${verbal + math + spatial}`);
   console.log(`  Full unique tests possible: ${Math.min(Math.floor(verbal / 18), Math.floor(math / 21), Math.floor(spatial / 11))}`);
+  console.log(`  Total:      ${verbal + math + spatial}`);
 }
 
 main()

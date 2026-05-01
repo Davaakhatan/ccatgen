@@ -698,7 +698,7 @@ export const mathLogicQuestions2: QuestionData[] = [
   {
     category: "math_logic",
     difficulty: 3,
-    stem: "Five people sit in a row. Eve is next to Frank. Frank is not next to Grace. Grace sits at one end. Holly is next to Grace. Who sits in the middle?",
+    stem: "Five people — Eve, Frank, Grace, Holly, and Ian — sit in a row (positions 1–5).\n\n• Grace sits in position 1.\n• Holly sits next to Grace.\n• Frank sits in position 5.\n• Eve is next to Frank.\n\nWho sits in the middle (position 3)?",
     options: [
       { label: "A", text: "Eve" },
       { label: "B", text: "Frank" },
@@ -706,7 +706,7 @@ export const mathLogicQuestions2: QuestionData[] = [
       { label: "D", text: "Holly" },
       { label: "E", text: "Ian" },
     ],
-    correctLabel: "D",
+    correctLabel: "E",
     tags: ["logic"],
   },
 
@@ -1208,11 +1208,11 @@ export const mathLogicQuestions2: QuestionData[] = [
     options: [
       { label: "A", text: "12:00 PM" },
       { label: "B", text: "1:00 PM" },
-      { label: "C", text: "1:00 PM" },
+      { label: "C", text: "1:15 PM" },
       { label: "D", text: "12:30 PM" },
       { label: "E", text: "1:30 PM" },
     ],
-    correctLabel: "A",
+    correctLabel: "B",
     tags: ["word-problem"],
   },
   {
@@ -1505,7 +1505,7 @@ export const mathLogicQuestions2: QuestionData[] = [
     stem: "What is 5/6 × 3/4?",
     options: [
       { label: "A", text: "5/8" },
-      { label: "B", text: "15/24" },
+      { label: "B", text: "7/12" },
       { label: "C", text: "8/10" },
       { label: "D", text: "3/5" },
       { label: "E", text: "1/2" },
@@ -1706,7 +1706,7 @@ export const mathLogicQuestions2: QuestionData[] = [
       { label: "D", text: "37" },
       { label: "E", text: "29" },
     ],
-    correctLabel: "C",
+    correctLabel: "B",
     tags: ["data-interpretation"],
   },
   {
@@ -2238,7 +2238,7 @@ export const mathLogicQuestions2: QuestionData[] = [
       { label: "D", text: "33" },
       { label: "E", text: "37" },
     ],
-    correctLabel: "B",
+    correctLabel: "A",
     tags: ["number-series"],
   },
   {
@@ -2248,11 +2248,11 @@ export const mathLogicQuestions2: QuestionData[] = [
     options: [
       { label: "A", text: "1/36" },
       { label: "B", text: "1/6" },
-      { label: "C", text: "6/216" },
+      { label: "C", text: "1/72" },
       { label: "D", text: "1/216" },
       { label: "E", text: "3/216" },
     ],
-    correctLabel: "C",
+    correctLabel: "A",
     tags: ["logic"],
   },
   {

@@ -13,6 +13,7 @@ export default function NewQuestionPage() {
     { label: "B", text: "" },
     { label: "C", text: "" },
     { label: "D", text: "" },
+    { label: "E", text: "" },
   ]);
   const [correctIndex, setCorrectIndex] = useState(0);
   const [tags, setTags] = useState("");

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
@@ -31,16 +31,16 @@ export default function AdminQuestionsPage() {
   const [filterCategory, setFilterCategory] = useState("");
   const [filterDifficulty, setFilterDifficulty] = useState("");
 
-  function fetchQuestions() {
+  const fetchQuestions = useCallback(() => {
     const params = new URLSearchParams();
     if (filterCategory) params.set("category", filterCategory);
     if (filterDifficulty) params.set("difficulty", filterDifficulty);
     fetch(`/api/admin/questions?${params}`)
       .then((res) => res.json())
       .then((data) => { setQuestions(data); setLoading(false); });
-  }
+  }, [filterCategory, filterDifficulty]);
 
-  useEffect(() => { fetchQuestions(); }, [filterCategory, filterDifficulty]);
+  useEffect(() => { fetchQuestions(); }, [fetchQuestions]);
 
   async function handleDelete(id: string) {
     if (!confirm("Delete this question?")) return;

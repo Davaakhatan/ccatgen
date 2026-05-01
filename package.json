@@ -7,7 +7,8 @@
     "build": "next build",
     "postinstall": "npx prisma generate",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "audit:questions": "node scripts/audit-question-bank.mjs"
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.0.2",
