@@ -66,6 +66,19 @@ export default function InstructionsPage() {
           </ul>
         </div>
 
+        <div className="rounded-lg border border-slate-200 bg-white p-5 shadow-sm">
+          <h2 className="font-semibold">Need speed methods first?</h2>
+          <p className="mt-2 text-sm leading-6 text-slate-600">
+            Review category tactics for verbal, math/logic, and spatial questions before starting the timer.
+          </p>
+          <button
+            onClick={() => router.push("/lessons")}
+            className="mt-4 rounded-lg border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700 transition-colors hover:bg-slate-50"
+          >
+            Open Lessons
+          </button>
+        </div>
+
         <button
           onClick={handleBeginTest}
           disabled={loading}

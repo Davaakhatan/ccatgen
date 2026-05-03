@@ -6,7 +6,12 @@ export default function Home() {
     <div className="min-h-screen bg-slate-50 text-slate-950">
       <nav className="mx-auto flex max-w-6xl items-center justify-between px-4 py-4 sm:px-6">
         <span className="text-base font-bold tracking-tight">CCAT Practice</span>
-        <UserNav />
+        <div className="flex items-center gap-4">
+          <Link href="/lessons" className="text-sm font-medium text-slate-600 transition-colors hover:text-slate-950">
+            Lessons
+          </Link>
+          <UserNav />
+        </div>
       </nav>
 
       <main className="mx-auto grid max-w-6xl gap-8 px-4 pb-12 pt-8 sm:px-6 lg:grid-cols-[1.1fr_0.9fr] lg:items-start">
@@ -44,6 +49,12 @@ export default function Home() {
               className="inline-flex items-center justify-center rounded-lg bg-slate-950 px-6 py-3 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-slate-800"
             >
               Start Practice Test
+            </Link>
+            <Link
+              href="/lessons"
+              className="inline-flex items-center justify-center rounded-lg border border-slate-200 bg-white px-6 py-3 text-sm font-semibold text-slate-700 shadow-sm transition-colors hover:bg-slate-100"
+            >
+              Learn Fast Methods
             </Link>
             <Link
               href="/test/results"
