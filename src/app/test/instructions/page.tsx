@@ -8,14 +8,15 @@ export default function InstructionsPage() {
   const [loading, setLoading] = useState(false);
   const [practiceLoading, setPracticeLoading] = useState<string | null>(null);
 
-  async function startSession(category?: "verbal" | "math_logic" | "spatial") {
+  async function startSession(category?: "verbal" | "math_logic" | "spatial", mode?: "hard") {
     setLoading(true);
-    if (category) setPracticeLoading(category);
+    if (category || mode) setPracticeLoading(category ?? mode ?? null);
     try {
+      const payload = category ? { category } : mode ? { mode } : undefined;
       const res = await fetch("/api/test-sessions", {
         method: "POST",
-        headers: category ? { "Content-Type": "application/json" } : undefined,
-        body: category ? JSON.stringify({ category }) : undefined,
+        headers: payload ? { "Content-Type": "application/json" } : undefined,
+        body: payload ? JSON.stringify(payload) : undefined,
       });
       const data = await res.json();
       router.push(`/test/${data.sessionId}`);
@@ -50,6 +51,20 @@ export default function InstructionsPage() {
             <div className="text-2xl font-bold">0</div>
             <div className="mt-1 text-sm text-slate-500">Calculator use</div>
           </div>
+        </div>
+
+        <div className="rounded-lg border border-amber-200 bg-amber-50 p-5 shadow-sm">
+          <h2 className="font-semibold text-amber-950">40+ hard mixed drill</h2>
+          <p className="mt-2 text-sm leading-6 text-amber-900">
+            Train above the pass line with 30 medium/hard questions in 9 minutes. Your target here is 24+/30 before you trust a full-test 40+ attempt.
+          </p>
+          <button
+            onClick={() => startSession(undefined, "hard")}
+            disabled={loading}
+            className="mt-4 rounded-lg bg-amber-900 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-amber-800 disabled:opacity-50"
+          >
+            {practiceLoading === "hard" ? "Starting..." : "Start 40+ Hard Drill"}
+          </button>
         </div>
 
         <div className="rounded-lg border border-slate-200 bg-white p-5 shadow-sm">

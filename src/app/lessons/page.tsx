@@ -204,13 +204,13 @@ export default function LessonsPage() {
   const router = useRouter();
   const [loadingCategory, setLoadingCategory] = useState<string | null>(null);
 
-  async function startCategory(category: "verbal" | "math_logic" | "spatial") {
-    setLoadingCategory(category);
+  async function startPractice(payload: { category?: "verbal" | "math_logic" | "spatial"; mode?: "hard" }) {
+    setLoadingCategory(payload.category ?? payload.mode ?? null);
     try {
       const res = await fetch("/api/test-sessions", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ category }),
+        body: JSON.stringify(payload),
       });
       const data = await res.json();
       router.push(`/test/${data.sessionId}`);
@@ -248,6 +248,31 @@ export default function LessonsPage() {
         </section>
 
         <section className="rounded-lg border border-slate-200 bg-white p-5 shadow-sm">
+          <h2 className="text-xl font-bold">40+ Training Protocol</h2>
+          <div className="mt-4 grid gap-4 lg:grid-cols-[1fr_1fr]">
+            <div className="rounded-lg border border-amber-200 bg-amber-50 p-4">
+              <h3 className="font-semibold text-amber-950">Score target</h3>
+              <p className="mt-2 text-sm leading-6 text-amber-900">
+                For a 40+/50 requirement, your practice target is 43+/50 on full tests and 24+/30 on hard mixed drills. That buffer protects you from test-day pressure.
+              </p>
+            </div>
+            <div className="rounded-lg border border-amber-200 bg-amber-50 p-4">
+              <h3 className="font-semibold text-amber-950">Training rule</h3>
+              <p className="mt-2 text-sm leading-6 text-amber-900">
+                Do not move to the real test until you can hit the target twice in a row without pausing, searching, or extending time.
+              </p>
+            </div>
+          </div>
+          <button
+            onClick={() => startPractice({ mode: "hard" })}
+            disabled={loadingCategory !== null}
+            className="mt-4 rounded-lg bg-amber-900 px-4 py-3 text-sm font-semibold text-white transition-colors hover:bg-amber-800 disabled:opacity-50"
+          >
+            {loadingCategory === "hard" ? "Starting..." : "Start 40+ Hard Mixed Drill"}
+          </button>
+        </section>
+
+        <section className="rounded-lg border border-slate-200 bg-white p-5 shadow-sm">
           <h2 className="text-xl font-bold">All CCAT Categories Covered</h2>
           <div className="mt-4 grid gap-4 lg:grid-cols-3">
             {categoryCoverage.map((category) => (
@@ -273,21 +298,21 @@ export default function LessonsPage() {
           </p>
           <div className="mt-4 grid gap-3 sm:grid-cols-3">
             <button
-              onClick={() => startCategory("verbal")}
+              onClick={() => startPractice({ category: "verbal" })}
               disabled={loadingCategory !== null}
               className="rounded-lg border border-blue-200 bg-blue-50 px-4 py-3 text-sm font-semibold text-blue-700 transition-colors hover:bg-blue-100 disabled:opacity-50"
             >
               {loadingCategory === "verbal" ? "Starting..." : "Verbal Drill"}
             </button>
             <button
-              onClick={() => startCategory("math_logic")}
+              onClick={() => startPractice({ category: "math_logic" })}
               disabled={loadingCategory !== null}
               className="rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm font-semibold text-emerald-700 transition-colors hover:bg-emerald-100 disabled:opacity-50"
             >
               {loadingCategory === "math_logic" ? "Starting..." : "Math & Logic Drill"}
             </button>
             <button
-              onClick={() => startCategory("spatial")}
+              onClick={() => startPractice({ category: "spatial" })}
               disabled={loadingCategory !== null}
               className="rounded-lg border border-violet-200 bg-violet-50 px-4 py-3 text-sm font-semibold text-violet-700 transition-colors hover:bg-violet-100 disabled:opacity-50"
             >

@@ -11,6 +11,13 @@ import {
 const TEST_DURATION_MINUTES = 15;
 const CATEGORY_PRACTICE_QUESTIONS = 20;
 const CATEGORY_PRACTICE_MINUTES = 6;
+const HARD_PRACTICE_MINUTES = 9;
+
+const HARD_PRACTICE_DISTRIBUTION = [
+  { category: Category.verbal, total: 13 },
+  { category: Category.math_logic, total: 10 },
+  { category: Category.spatial, total: 7 },
+] as const;
 
 function shuffle<T>(array: T[]): T[] {
   const shuffled = [...array];
@@ -216,6 +223,89 @@ export async function generateCategoryPractice(category: Category, userId?: stri
       questions: {
         create: selected.map((question, index) => ({
           questionId: question.id,
+          order: index + 1,
+        })),
+      },
+    },
+    include: {
+      questions: {
+        orderBy: { order: "asc" },
+        include: {
+          question: {
+            include: {
+              options: { select: { id: true, label: true, text: true } },
+            },
+          },
+        },
+      },
+    },
+  });
+
+  return {
+    sessionId: session.id,
+    endsAt: session.endsAt,
+    questions: session.questions.map((qi) => ({
+      instanceId: qi.id,
+      order: qi.order,
+      questionId: qi.questionId,
+      category: qi.question.category,
+      stem: qi.question.stem,
+      options: qi.question.options,
+    })),
+  };
+}
+
+export async function generateHardPractice(userId?: string) {
+  const selectedQuestions: CandidateQuestion[] = [];
+  const selectedIds = new Set<string>();
+  const selectedStemKeys = new Set<string>();
+
+  for (const { category, total } of HARD_PRACTICE_DISTRIBUTION) {
+    const candidates = await getEligibleCandidates(category, [...CCAT_STYLE_TAGS[category]]);
+    const hardFirst = candidates.filter((q) => q.difficulty >= 2);
+    const selected = sampleRandom(hardFirst, total);
+
+    if (selected.length < total) {
+      const selectedSectionIds = new Set(selected.map((q) => q.id));
+      selected.push(
+        ...sampleRandom(
+          candidates.filter((q) => !selectedSectionIds.has(q.id)),
+          total - selected.length
+        )
+      );
+    }
+
+    const uniqueSelected = selected.filter((q) => {
+      const stemKey = ccatStemKey(q);
+      if (selectedIds.has(q.id) || selectedStemKeys.has(stemKey)) return false;
+      selectedIds.add(q.id);
+      selectedStemKeys.add(stemKey);
+      return true;
+    });
+
+    if (uniqueSelected.length < total) {
+      throw new Error(`Not enough ${category} CCAT-style questions for hard practice: need ${total}, found ${uniqueSelected.length}`);
+    }
+
+    selectedQuestions.push(...uniqueSelected);
+  }
+
+  const orderedIds = [2, 3, 1]
+    .flatMap((difficulty) => shuffle(selectedQuestions.filter((q) => q.difficulty === difficulty)))
+    .map((q) => q.id);
+  const shuffledIds = orderedIds.length === selectedQuestions.length ? orderedIds : shuffle(selectedQuestions.map((q) => q.id));
+  const now = new Date();
+  const endsAt = new Date(now.getTime() + HARD_PRACTICE_MINUTES * 60 * 1000);
+
+  const session = await prisma.testSession.create({
+    data: {
+      userId: userId ?? null,
+      startedAt: now,
+      endsAt,
+      status: "active",
+      questions: {
+        create: shuffledIds.map((questionId, index) => ({
+          questionId,
           order: index + 1,
         })),
       },
