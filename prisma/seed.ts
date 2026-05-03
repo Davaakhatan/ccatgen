@@ -16,6 +16,14 @@ type SeedQuestion = CcatQuestionLike & {
   correctLabel: string;
 };
 
+function normalizeCcatQuestion(q: SeedQuestion): SeedQuestion {
+  if (q.tags.includes("true-false-uncertain")) {
+    return { ...q, category: "math_logic" };
+  }
+
+  return q;
+}
+
 function dedupeByStem(questions: SeedQuestion[]) {
   const seen = new Set<string>();
   const unique: SeedQuestion[] = [];
@@ -79,7 +87,7 @@ async function main() {
     ...verbalQuestions5,
     ...mathLogicQuestions5,
   ];
-  const allQuestions = dedupeByStem(rawQuestions.filter(isCcatStyleQuestion));
+  const allQuestions = dedupeByStem(rawQuestions.map(normalizeCcatQuestion).filter(isCcatStyleQuestion));
   console.log(`  Filtered out ${rawQuestions.length - allQuestions.length} duplicate or non-CCAT-style questions.`);
   console.log(`  Seeding ${allQuestions.length} questions...`);
 
@@ -125,12 +133,12 @@ async function main() {
   const math = await prisma.question.count({ where: { category: "math_logic" } });
   const spatial = await prisma.question.count({ where: { category: "spatial" } });
 
-  console.log(`\nSummary (CCAT format: 18 verbal + 21 math + 11 spatial = 50):`);
-  console.log(`  Verbal:     ${verbal} (need ${18 * 40} for 40 tests)`);
-  console.log(`  Math&Logic: ${math} (need ${21 * 40} for 40 tests)`);
+  console.log(`\nSummary (CCAT format: 22 verbal + 17 math/logic + 11 spatial = 50):`);
+  console.log(`  Verbal:     ${verbal} (need ${22 * 40} for 40 tests)`);
+  console.log(`  Math&Logic: ${math} (need ${17 * 40} for 40 tests)`);
   console.log(`  Spatial:    ${spatial} (need ${11 * 40} for 40 tests)`);
   console.log(`  Total:      ${verbal + math + spatial}`);
-  console.log(`  Full unique tests possible: ${Math.min(Math.floor(verbal / 18), Math.floor(math / 21), Math.floor(spatial / 11))}`);
+  console.log(`  Full unique tests possible: ${Math.min(Math.floor(verbal / 22), Math.floor(math / 17), Math.floor(spatial / 11))}`);
   console.log(`  Total:      ${verbal + math + spatial}`);
 }
 

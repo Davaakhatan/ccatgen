@@ -14,16 +14,17 @@ export const CCAT_CATEGORY_DISTRIBUTIONS = [
 ] as const;
 
 export const CCAT_SECTION_BLUEPRINT = [
-  { category: "verbal", total: 9, tags: ["analogy"] },
+  { category: "verbal", total: 8, tags: ["analogy"] },
   { category: "verbal", total: 7, tags: ["antonym"] },
-  { category: "verbal", total: 6, tags: ["sentence-completion"] },
-  { category: "math_logic", total: 5, tags: ["word-problem"] },
-  { category: "math_logic", total: 5, tags: ["number-sequence", "number-series", "letter-series"] },
-  { category: "math_logic", total: 4, tags: ["data-interpretation", "graph-interpretation", "ratio"] },
-  { category: "math_logic", total: 3, tags: ["syllogism"] },
-  { category: "spatial", total: 6, tags: ["next-in-series", "rotation", "sequence"] },
-  { category: "spatial", total: 4, tags: ["matrix"] },
-  { category: "spatial", total: 1, tags: ["reflection", "spatial-reasoning", "transformation"] },
+  { category: "verbal", total: 7, tags: ["sentence-completion"] },
+  { category: "math_logic", total: 4, tags: ["word-problem", "algebra", "ratio", "percentage"] },
+  { category: "math_logic", total: 4, tags: ["number-sequence", "number-series", "letter-series"] },
+  { category: "math_logic", total: 3, tags: ["data-interpretation", "graph-interpretation"] },
+  { category: "math_logic", total: 6, tags: ["syllogism", "true-false-uncertain", "logical-deduction"] },
+  { category: "spatial", total: 4, tags: ["next-in-series", "rotation", "sequence"] },
+  { category: "spatial", total: 3, tags: ["matrix"] },
+  { category: "spatial", total: 2, tags: ["reflection", "spatial-reasoning", "transformation"] },
+  { category: "spatial", total: 2, tags: ["odd-one-out"] },
 ] as const;
 
 export const CCAT_STYLE_TAGS = {
@@ -37,15 +38,19 @@ export const CCAT_STYLE_TAGS = {
     "data-interpretation",
     "graph-interpretation",
     "letter-series",
+    "logical-deduction",
     "number-sequence",
     "number-series",
+    "percentage",
     "ratio",
     "syllogism",
+    "true-false-uncertain",
     "word-problem",
   ]),
   spatial: new Set([
     "matrix",
     "next-in-series",
+    "odd-one-out",
     "reflection",
     "rotation",
     "sequence",
@@ -56,7 +61,6 @@ export const CCAT_STYLE_TAGS = {
 
 const NON_TESTLIKE_STEM_PATTERNS = [
   /\btrue,?\s+false,?\s+or\s+uncertain\b/i,
-  /\bif the first two statements are true\b/i,
   /\bcolumn a\b/i,
   /\bleft-hand column\b/i,
   /\bright-hand column\b/i,
@@ -66,9 +70,6 @@ const NON_TESTLIKE_STEM_PATTERNS = [
   /\bwhich word means the same as\b/i,
   /\bmost nearly means\b/i,
   /\bin the sentence\b.+\bwhat does\b/i,
-  /\bwhich shape (?:does not|doesn'?t|does NOT) belong\b/i,
-  /\bwhich (?:does not|doesn'?t|does NOT) belong\b/i,
-  /\bodd one out\b/i,
   /\bthe pacific ocean\b/i,
   /\bvenus is the closest planet\b/i,
   /\bthere are 365 days in a leap year\b/i,
@@ -172,6 +173,12 @@ const NON_TESTLIKE_STEM_PATTERNS = [
 
 const ELEMENTARY_MATH_TAGS = new Set(["basic-math", "percentage"]);
 
+const OFFICIAL_DIRECT_MATH_PATTERNS = [
+  /\baverage of\b/i,
+  /\bwhat is the (?:third|fourth|fifth) number\b/i,
+  /\b\d+(?:\.\d+)?%\s+of\s+what\s+number\b/i,
+];
+
 const COMPLEX_WORD_PROBLEM_PATTERNS = [
   /\baverage speed\b/i,
   /\btoward each other\b/i,
@@ -197,17 +204,29 @@ export function hasAnyCcatTag(q: Pick<CcatQuestionLike, "category" | "tags">) {
 }
 
 export function isCcatStyleQuestion(q: CcatQuestionLike) {
-  const optionCountIsValid = q.category === "spatial"
-    ? q.options.length >= 4 && q.options.length <= 5
-    : q.options.length === 5;
+  const isSyllogism = q.category === "math_logic" && q.tags.includes("true-false-uncertain");
+  const optionCountIsValid = isSyllogism
+    ? q.options.length === 3
+    : q.category === "spatial"
+      ? q.options.length >= 4 && q.options.length <= 5
+      : q.options.length === 5;
   const hasCorrectLabel = q.correctLabel === undefined || q.options.some((option) => option.label === q.correctLabel);
   const givesAwayPattern = NON_TESTLIKE_STEM_PATTERNS.some((pattern) => pattern.test(q.stem));
-  const isTooEasyMath = q.category === "math_logic" && q.difficulty !== undefined && q.difficulty < 3;
+  const isOfficialDirectMath = OFFICIAL_DIRECT_MATH_PATTERNS.some((pattern) => pattern.test(q.stem));
+  const isTooEasyMath =
+    q.category === "math_logic" &&
+    q.difficulty !== undefined &&
+    q.difficulty < 3 &&
+    !isSyllogism &&
+    !isOfficialDirectMath;
   const isTooEasyVerbalOrSpatial =
     (q.category === "verbal" || q.category === "spatial") &&
     q.difficulty !== undefined &&
     q.difficulty < 2;
-  const hasElementaryMathTag = q.category === "math_logic" && q.tags.some((tag) => ELEMENTARY_MATH_TAGS.has(tag));
+  const hasElementaryMathTag =
+    q.category === "math_logic" &&
+    q.tags.some((tag) => ELEMENTARY_MATH_TAGS.has(tag)) &&
+    !isOfficialDirectMath;
   const isUnchallengingWordProblem =
     q.category === "math_logic" &&
     q.tags.includes("word-problem") &&

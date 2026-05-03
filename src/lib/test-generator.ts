@@ -67,6 +67,7 @@ async function getEligibleCandidates(category: Category, tags: string[]) {
 
 export async function generateTest(userId?: string) {
   const selectedQuestionIds: string[] = [];
+  const selectedQuestions: CandidateQuestion[] = [];
   const selectedIds = new Set<string>();
   const selectedStemKeys = new Set<string>();
   const selectedCategoryCounts: Record<Category, number> = {
@@ -81,11 +82,29 @@ export async function generateTest(userId?: string) {
     const selected = sampleRandom(available, section.total);
 
     if (selected.length < section.total) {
-      throw new Error(`Not enough ${section.category} questions for CCAT section ${section.tags.join("/")}: need ${section.total}, found ${available.length}`);
+      const fallbackCandidates = await getEligibleCandidates(section.category, [...CCAT_STYLE_TAGS[section.category]]);
+      const selectedSectionIds = new Set(selected.map((q) => q.id));
+      const selectedSectionStemKeys = new Set(selected.map((q) => ccatStemKey(q)));
+      const fallback = sampleRandom(
+        fallbackCandidates.filter(
+          (q) =>
+            !selectedIds.has(q.id) &&
+            !selectedSectionIds.has(q.id) &&
+            !selectedStemKeys.has(ccatStemKey(q)) &&
+            !selectedSectionStemKeys.has(ccatStemKey(q))
+        ),
+        section.total - selected.length
+      );
+      selected.push(...fallback);
+    }
+
+    if (selected.length < section.total) {
+      throw new Error(`Not enough ${section.category} questions for CCAT section ${section.tags.join("/")}: need ${section.total}, found ${selected.length}`);
     }
 
     for (const q of selected) {
       selectedQuestionIds.push(q.id);
+      selectedQuestions.push(q);
       selectedIds.add(q.id);
       selectedStemKeys.add(ccatStemKey(q));
       selectedCategoryCounts[q.category] += 1;
@@ -108,13 +127,17 @@ export async function generateTest(userId?: string) {
 
     for (const q of filler) {
       selectedQuestionIds.push(q.id);
+      selectedQuestions.push(q);
       selectedIds.add(q.id);
       selectedStemKeys.add(ccatStemKey(q));
       selectedCategoryCounts[q.category] += 1;
     }
   }
 
-  const shuffledIds = shuffle(selectedQuestionIds);
+  const orderedIds = [1, 2, 3]
+    .flatMap((difficulty) => shuffle(selectedQuestions.filter((q) => q.difficulty === difficulty)))
+    .map((q) => q.id);
+  const shuffledIds = orderedIds.length === selectedQuestionIds.length ? orderedIds : shuffle(selectedQuestionIds);
   const now = new Date();
   const endsAt = new Date(now.getTime() + TEST_DURATION_MINUTES * 60 * 1000);
 

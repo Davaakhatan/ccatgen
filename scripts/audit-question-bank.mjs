@@ -22,15 +22,19 @@ const ccatStyleTags = {
     "data-interpretation",
     "graph-interpretation",
     "letter-series",
+    "logical-deduction",
     "number-sequence",
     "number-series",
+    "percentage",
     "ratio",
     "syllogism",
+    "true-false-uncertain",
     "word-problem",
   ]),
   spatial: new Set([
     "matrix",
     "next-in-series",
+    "odd-one-out",
     "reflection",
     "rotation",
     "sequence",
@@ -41,7 +45,6 @@ const ccatStyleTags = {
 
 const nonTestlikeStemPatterns = [
   /\btrue,?\s+false,?\s+or\s+uncertain\b/i,
-  /\bif the first two statements are true\b/i,
   /\bcolumn a\b/i,
   /\bleft-hand column\b/i,
   /\bright-hand column\b/i,
@@ -51,9 +54,6 @@ const nonTestlikeStemPatterns = [
   /\bwhich word means the same as\b/i,
   /\bmost nearly means\b/i,
   /\bin the sentence\b.+\bwhat does\b/i,
-  /\bwhich shape (?:does not|doesn'?t|does NOT) belong\b/i,
-  /\bwhich (?:does not|doesn'?t|does NOT) belong\b/i,
-  /\bodd one out\b/i,
   /\bthe pacific ocean\b/i,
   /\bvenus is the closest planet\b/i,
   /\bthere are 365 days in a leap year\b/i,
@@ -157,6 +157,12 @@ const nonTestlikeStemPatterns = [
 
 const elementaryMathTags = new Set(["basic-math", "percentage"]);
 
+const officialDirectMathPatterns = [
+  /\baverage of\b/i,
+  /\bwhat is the (?:third|fourth|fifth) number\b/i,
+  /\b\d+(?:\.\d+)?%\s+of\s+what\s+number\b/i,
+];
+
 const complexWordProblemPatterns = [
   /\baverage speed\b/i,
   /\btoward each other\b/i,
@@ -206,19 +212,39 @@ function loadBank(file) {
     .flat();
 }
 
+function normalizeCcatQuestion(q) {
+  if (q.tags?.includes("true-false-uncertain")) {
+    return { ...q, category: "math_logic" };
+  }
+
+  return q;
+}
+
 function isCcatStyle(q) {
   const allowedTags = ccatStyleTags[q.category];
   const hasAllowedTag = q.tags?.some((tag) => allowedTags?.has(tag)) ?? false;
-  const optionCountIsValid = q.category === "spatial"
-    ? q.options.length >= 4 && q.options.length <= 5
-    : q.options.length === 5;
+  const isSyllogism = q.category === "math_logic" && q.tags.includes("true-false-uncertain");
+  const optionCountIsValid = isSyllogism
+    ? q.options.length === 3
+    : q.category === "spatial"
+      ? q.options.length >= 4 && q.options.length <= 5
+      : q.options.length === 5;
   const givesAwayPattern = nonTestlikeStemPatterns.some((pattern) => pattern.test(q.stem));
-  const isTooEasyMath = q.category === "math_logic" && q.difficulty !== undefined && q.difficulty < 3;
+  const isOfficialDirectMath = officialDirectMathPatterns.some((pattern) => pattern.test(q.stem));
+  const isTooEasyMath =
+    q.category === "math_logic" &&
+    q.difficulty !== undefined &&
+    q.difficulty < 3 &&
+    !isSyllogism &&
+    !isOfficialDirectMath;
   const isTooEasyVerbalOrSpatial =
     (q.category === "verbal" || q.category === "spatial") &&
     q.difficulty !== undefined &&
     q.difficulty < 2;
-  const hasElementaryMathTag = q.category === "math_logic" && q.tags.some((tag) => elementaryMathTags.has(tag));
+  const hasElementaryMathTag =
+    q.category === "math_logic" &&
+    q.tags.some((tag) => elementaryMathTags.has(tag)) &&
+    !isOfficialDirectMath;
   const isUnchallengingWordProblem =
     q.category === "math_logic" &&
     q.tags.includes("word-problem") &&
@@ -239,7 +265,7 @@ function isCcatStyle(q) {
 
 const questions = [];
 for (const file of bankFiles) {
-  loadBank(file).forEach((q, index) => questions.push({ ...q, file, number: index + 1 }));
+  loadBank(file).forEach((q, index) => questions.push({ ...normalizeCcatQuestion(q), file, number: index + 1 }));
 }
 
 const seen = new Map();
@@ -263,9 +289,11 @@ for (const q of questions) {
   stats.byCategory[q.category] ??= { total: 0, ccatStyle: 0 };
   stats.byCategory[q.category].total += 1;
 
-  const validOptionCount = q.category === "spatial"
-    ? q.options.length >= 4 && q.options.length <= 5
-    : q.options.length === 5;
+  const validOptionCount = q.tags.includes("true-false-uncertain")
+    ? q.options.length === 3
+    : q.category === "spatial"
+      ? q.options.length >= 4 && q.options.length <= 5
+      : q.options.length === 5;
   const hasCorrectLabel = q.options.some((option) => option.label === q.correctLabel);
   const ccatStyle = isCcatStyle(q);
 
