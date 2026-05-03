@@ -6,16 +6,23 @@ import { useState } from "react";
 export default function InstructionsPage() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
+  const [practiceLoading, setPracticeLoading] = useState<string | null>(null);
 
-  async function handleBeginTest() {
+  async function startSession(category?: "verbal" | "math_logic" | "spatial") {
     setLoading(true);
+    if (category) setPracticeLoading(category);
     try {
-      const res = await fetch("/api/test-sessions", { method: "POST" });
+      const res = await fetch("/api/test-sessions", {
+        method: "POST",
+        headers: category ? { "Content-Type": "application/json" } : undefined,
+        body: category ? JSON.stringify({ category }) : undefined,
+      });
       const data = await res.json();
       router.push(`/test/${data.sessionId}`);
     } catch {
       alert("Failed to start test. Please try again.");
       setLoading(false);
+      setPracticeLoading(null);
     }
   }
 
@@ -67,6 +74,36 @@ export default function InstructionsPage() {
         </div>
 
         <div className="rounded-lg border border-slate-200 bg-white p-5 shadow-sm">
+          <h2 className="font-semibold">Single-category speed drills</h2>
+          <p className="mt-2 text-sm leading-6 text-slate-600">
+            Drill 20 questions in 6 minutes for one category. This trains the 18-second rhythm without mixing skills.
+          </p>
+          <div className="mt-4 grid gap-3 sm:grid-cols-3">
+            <button
+              onClick={() => startSession("verbal")}
+              disabled={loading}
+              className="rounded-lg border border-blue-200 bg-blue-50 px-4 py-3 text-sm font-semibold text-blue-700 transition-colors hover:bg-blue-100 disabled:opacity-50"
+            >
+              {practiceLoading === "verbal" ? "Starting..." : "Verbal Drill"}
+            </button>
+            <button
+              onClick={() => startSession("math_logic")}
+              disabled={loading}
+              className="rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm font-semibold text-emerald-700 transition-colors hover:bg-emerald-100 disabled:opacity-50"
+            >
+              {practiceLoading === "math_logic" ? "Starting..." : "Math & Logic Drill"}
+            </button>
+            <button
+              onClick={() => startSession("spatial")}
+              disabled={loading}
+              className="rounded-lg border border-violet-200 bg-violet-50 px-4 py-3 text-sm font-semibold text-violet-700 transition-colors hover:bg-violet-100 disabled:opacity-50"
+            >
+              {practiceLoading === "spatial" ? "Starting..." : "Spatial Drill"}
+            </button>
+          </div>
+        </div>
+
+        <div className="rounded-lg border border-slate-200 bg-white p-5 shadow-sm">
           <h2 className="font-semibold">Need speed methods first?</h2>
           <p className="mt-2 text-sm leading-6 text-slate-600">
             Review category tactics for verbal, math/logic, and spatial questions before starting the timer.
@@ -80,7 +117,7 @@ export default function InstructionsPage() {
         </div>
 
         <button
-          onClick={handleBeginTest}
+          onClick={() => startSession()}
           disabled={loading}
           className="w-full rounded-lg bg-slate-950 py-3.5 font-semibold text-white shadow-sm transition-colors hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-50"
         >

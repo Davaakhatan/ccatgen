@@ -1,12 +1,20 @@
 import { NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
-import { generateTest } from "@/lib/test-generator";
+import { Category } from "@/generated/prisma/client";
+import { generateCategoryPractice, generateTest } from "@/lib/test-generator";
 
-export async function POST() {
+const categoryValues = new Set<string>(Object.values(Category));
+
+export async function POST(request: Request) {
   try {
     const session = await auth();
     const userId = session?.user?.id;
-    const result = await generateTest(userId);
+    const body = await request.json().catch(() => ({}));
+    const category = typeof body.category === "string" ? body.category : null;
+    const result = category && categoryValues.has(category)
+      ? await generateCategoryPractice(category as Category, userId)
+      : await generateTest(userId);
+
     return NextResponse.json(result, { status: 201 });
   } catch (error) {
     console.error("Failed to generate test session:", error);

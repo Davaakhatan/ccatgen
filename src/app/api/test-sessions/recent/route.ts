@@ -3,10 +3,11 @@ import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { Category } from "@/generated/prisma/client";
 
-function getPercentileBand(rawScore: number): string {
-  if (rawScore <= 15) return "Below Average";
-  if (rawScore <= 30) return "Average";
-  if (rawScore <= 40) return "Above Average";
+function getPercentileBand(rawScore: number, total: number): string {
+  const pct = total > 0 ? rawScore / total : 0;
+  if (pct <= 0.3) return "Below Average";
+  if (pct <= 0.6) return "Average";
+  if (pct <= 0.8) return "Above Average";
   return "Exceptional";
 }
 
@@ -57,7 +58,7 @@ export async function GET() {
         startedAt: session.startedAt,
         rawScore,
         total: session.questions.length,
-        percentileBand: getPercentileBand(rawScore),
+        percentileBand: getPercentileBand(rawScore, session.questions.length),
         categoryBreakdown,
       };
     });

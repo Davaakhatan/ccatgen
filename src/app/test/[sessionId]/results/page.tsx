@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 
 type ResultData = {
   rawScore: number;
+  total: number;
   categoryBreakdown: {
     verbal: { correct: number; total: number };
     math_logic: { correct: number; total: number };
@@ -65,7 +66,7 @@ export default function ResultsPage() {
     { key: "spatial" as const, label: "Spatial", data: result.categoryBreakdown.spatial },
   ];
 
-  const scorePct = Math.round((result.rawScore / 50) * 100);
+  const scorePct = result.total > 0 ? Math.round((result.rawScore / result.total) * 100) : 0;
   const band = bandStyles[result.percentileBand] || { bg: "bg-slate-50", text: "text-slate-700", border: "border-slate-200" };
 
   return (
@@ -76,7 +77,7 @@ export default function ResultsPage() {
           <h1 className="mt-2 text-2xl font-bold">Your Score</h1>
 
           <div className="mt-6 space-y-3">
-            <div className="text-6xl font-extrabold">{result.rawScore}<span className="text-2xl text-slate-400">/50</span></div>
+            <div className="text-6xl font-extrabold">{result.rawScore}<span className="text-2xl text-slate-400">/{result.total}</span></div>
             <div className="text-slate-500">{scorePct}% correct</div>
           </div>
 

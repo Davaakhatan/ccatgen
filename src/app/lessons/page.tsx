@@ -1,4 +1,8 @@
+"use client";
+
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 const timingRules = [
   {
@@ -16,6 +20,10 @@ const timingRules = [
   {
     title: "Spatial ceiling",
     detail: "Look for one rule at a time: count, rotation, fill, position, symmetry, then outlier.",
+  },
+  {
+    title: "Forum pattern",
+    detail: "Most reports say the clock is the real enemy. Train the 18-second rhythm by isolating weak categories.",
   },
 ];
 
@@ -43,6 +51,18 @@ const verbalLessons = [
     method: "Break unfamiliar words into roots and tone.",
     moves: ["bene = good", "mal = bad", "brev = short", "loqu = speak", "cred = believe", "Use answer choices to infer the word family"],
     example: "Credulous relates to believing, so its opposite is skeptical, not quiet or angry.",
+  },
+  {
+    type: "Same relationship pairs",
+    method: "Reduce each pair to a two-word relationship label.",
+    moves: ["tool -> use", "object -> material", "cause -> effect", "worker -> product", "place -> activity"],
+    example: "Author : book is creator -> creation; choose the answer pair with the same relationship.",
+  },
+  {
+    type: "Two-blank completion",
+    method: "Solve the emotional direction first, then grammar.",
+    moves: ["Mark positive/negative tone", "Reject choices where only one blank works", "Check if the second word makes the sentence too extreme"],
+    example: "If the sentence says the manager calmed a conflict, the second blank should not be furious or hostile.",
   },
 ];
 
@@ -89,6 +109,24 @@ const mathLessons = [
     moves: ["Largest increase uses differences, not largest value", "Percentage change = change / original", "More than asks for subtraction after both values are found"],
     example: "From 1200 to 1600 is +400. Percent increase is 400/1200 = 33.3%.",
   },
+  {
+    type: "Algebra shortcuts",
+    method: "Avoid formal algebra when answer testing is faster.",
+    moves: ["Plug choices into the equation", "Estimate first to remove far choices", "For linear equations, isolate only once"],
+    example: "If 3x + 7 = 31, subtract 7 first, then divide by 3. Do not write extra steps.",
+  },
+  {
+    type: "Probability",
+    method: "Use favorable / total and reduce only if choices require it.",
+    moves: ["Count target outcomes", "Count all outcomes", "For 'not', subtract from 1", "For without replacement, update both numerator and denominator"],
+    example: "5 blue out of 15 total is 5/15, so the answer is 1/3.",
+  },
+  {
+    type: "Mental math anchors",
+    method: "Memorize common conversions so the calculator ban does not slow you.",
+    moves: ["1/8 = 12.5%", "1/6 = 16.7%", "1/3 = 33.3%", "3/4 = 75%", "x% increase then y% decrease is multiplicative"],
+    example: "A 20% drop means multiply by 0.8; reversing it means divide by 0.8.",
+  },
 ];
 
 const spatialLessons = [
@@ -122,6 +160,36 @@ const spatialLessons = [
     moves: ["A reflected arrow reverses direction", "A rotated figure keeps handedness", "A reflected figure changes handedness"],
     example: "If a flag is on the right side before reflection, it should appear on the left side after reflection.",
   },
+  {
+    type: "Overlay rules",
+    method: "When two cells combine, compare what survives and what disappears.",
+    moves: ["Same + same may cancel", "Different may combine", "Filled plus empty may become filled", "Track one symbol at a time"],
+    example: "If row cells combine dots from the first two figures, the missing cell should contain the union of those dot positions.",
+  },
+  {
+    type: "Counting rules",
+    method: "Count elements before interpreting the drawing.",
+    moves: ["Outer sides", "Inner shapes", "Dots", "Line segments", "Filled regions"],
+    example: "If every step adds one line and alternates fill, solve count first and fill second.",
+  },
+];
+
+const categoryCoverage = [
+  {
+    label: "Verbal",
+    count: "22",
+    items: ["Analogies", "Antonyms", "Sentence completion", "Two-blank context", "Vocabulary roots"],
+  },
+  {
+    label: "Math & Logic",
+    count: "17",
+    items: ["Averages", "Percentages", "Ratios", "Rates", "Work", "Series", "Data", "Syllogisms", "Probability"],
+  },
+  {
+    label: "Spatial",
+    count: "11",
+    items: ["Odd one out", "Shape series", "Rotation", "Reflection", "Matrices", "Overlay", "Counting"],
+  },
 ];
 
 const skipSignals = [
@@ -133,6 +201,25 @@ const skipSignals = [
 ];
 
 export default function LessonsPage() {
+  const router = useRouter();
+  const [loadingCategory, setLoadingCategory] = useState<string | null>(null);
+
+  async function startCategory(category: "verbal" | "math_logic" | "spatial") {
+    setLoadingCategory(category);
+    try {
+      const res = await fetch("/api/test-sessions", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ category }),
+      });
+      const data = await res.json();
+      router.push(`/test/${data.sessionId}`);
+    } catch {
+      alert("Failed to start category drill.");
+      setLoadingCategory(null);
+    }
+  }
+
   return (
     <div className="min-h-screen bg-slate-50 text-slate-950">
       <nav className="mx-auto flex max-w-6xl items-center justify-between px-4 py-4 sm:px-6">
@@ -151,13 +238,62 @@ export default function LessonsPage() {
           </p>
         </section>
 
-        <section className="grid gap-3 sm:grid-cols-4">
+        <section className="grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
           {timingRules.map((rule) => (
             <div key={rule.title} className="rounded-lg border border-slate-200 bg-white p-4 shadow-sm">
               <h2 className="font-semibold">{rule.title}</h2>
               <p className="mt-2 text-sm leading-6 text-slate-600">{rule.detail}</p>
             </div>
           ))}
+        </section>
+
+        <section className="rounded-lg border border-slate-200 bg-white p-5 shadow-sm">
+          <h2 className="text-xl font-bold">All CCAT Categories Covered</h2>
+          <div className="mt-4 grid gap-4 lg:grid-cols-3">
+            {categoryCoverage.map((category) => (
+              <div key={category.label} className="rounded-lg border border-slate-200 bg-slate-50 p-4">
+                <div className="flex items-center justify-between">
+                  <h3 className="font-semibold">{category.label}</h3>
+                  <span className="rounded-full bg-white px-2.5 py-1 text-xs font-semibold text-slate-600">{category.count} in full test</span>
+                </div>
+                <ul className="mt-3 space-y-2 text-sm text-slate-600">
+                  {category.items.map((item) => (
+                    <li key={item}>- {item}</li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        <section className="rounded-lg border border-slate-200 bg-white p-5 shadow-sm">
+          <h2 className="text-xl font-bold">One-Category Timed Drills</h2>
+          <p className="mt-2 text-sm leading-6 text-slate-600">
+            Public discussion around CCAT prep repeatedly points to pacing as the main problem. Use these 20-question, 6-minute drills to build category-specific speed before taking the full mixed test.
+          </p>
+          <div className="mt-4 grid gap-3 sm:grid-cols-3">
+            <button
+              onClick={() => startCategory("verbal")}
+              disabled={loadingCategory !== null}
+              className="rounded-lg border border-blue-200 bg-blue-50 px-4 py-3 text-sm font-semibold text-blue-700 transition-colors hover:bg-blue-100 disabled:opacity-50"
+            >
+              {loadingCategory === "verbal" ? "Starting..." : "Verbal Drill"}
+            </button>
+            <button
+              onClick={() => startCategory("math_logic")}
+              disabled={loadingCategory !== null}
+              className="rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm font-semibold text-emerald-700 transition-colors hover:bg-emerald-100 disabled:opacity-50"
+            >
+              {loadingCategory === "math_logic" ? "Starting..." : "Math & Logic Drill"}
+            </button>
+            <button
+              onClick={() => startCategory("spatial")}
+              disabled={loadingCategory !== null}
+              className="rounded-lg border border-violet-200 bg-violet-50 px-4 py-3 text-sm font-semibold text-violet-700 transition-colors hover:bg-violet-100 disabled:opacity-50"
+            >
+              {loadingCategory === "spatial" ? "Starting..." : "Spatial Drill"}
+            </button>
+          </div>
         </section>
 
         <section className="rounded-lg border border-slate-200 bg-white p-5 shadow-sm">
@@ -213,11 +349,12 @@ export default function LessonsPage() {
         <section className="rounded-lg border border-slate-200 bg-white p-5 shadow-sm">
           <h2 className="text-xl font-bold">Source Notes</h2>
           <p className="mt-2 text-sm leading-6 text-slate-600">
-            Built from public Criteria and Crossover CCAT guidance: 50 questions, 15 minutes, no calculator, verbal/math/spatial categories, no penalty for wrong answers, and Crossover&apos;s emphasis on speed, skipping, and increasing difficulty.
+            Built from public Criteria and Crossover CCAT guidance plus public candidate discussion patterns: 50 questions, 15 minutes, no calculator, verbal/math/spatial categories, no penalty for wrong answers, increasing difficulty, and heavy emphasis on 18-second pacing.
           </p>
           <div className="mt-4 flex flex-wrap gap-3 text-sm">
             <a href="https://www.criteriacorp.com/candidates/ccat-prep" className="font-semibold text-slate-700 underline">Criteria CCAT prep</a>
             <a href="https://www.crossover.com/resources/ccat-guide" className="font-semibold text-slate-700 underline">Crossover CCAT guide</a>
+            <a href="https://www.reddit.com/r/recruitinghell/comments/1rybr97/ccat_exam/" className="font-semibold text-slate-700 underline">Reddit timing discussion</a>
           </div>
         </section>
       </main>

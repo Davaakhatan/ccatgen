@@ -16,6 +16,7 @@ type Question = {
 type SessionData = {
   sessionId: string;
   status: string;
+  startedAt: string;
   endsAt: string;
   questions: Question[];
 };
@@ -125,7 +126,8 @@ export default function TestRunnerPage() {
   const unansweredCount = session.questions.length - answeredCount;
 
   const progressPct = Math.round(((currentIndex + 1) / session.questions.length) * 100);
-  const timePct = session ? Math.round((timeLeft / (15 * 60)) * 100) : 100;
+  const totalDuration = Math.max(1, Math.floor((new Date(session.endsAt).getTime() - new Date(session.startedAt).getTime()) / 1000));
+  const timePct = Math.round((timeLeft / totalDuration) * 100);
 
   return (
     <div className="min-h-screen bg-slate-50 flex flex-col">
@@ -254,10 +256,10 @@ export default function TestRunnerPage() {
               <div>
                 <div className="mb-1 flex justify-between text-slate-500">
                   <span>Answered</span>
-                  <span>{answeredCount}/50</span>
+                  <span>{answeredCount}/{session.questions.length}</span>
                 </div>
                 <div className="h-2 overflow-hidden rounded-full bg-slate-100">
-                  <div className="h-full rounded-full bg-emerald-500" style={{ width: `${(answeredCount / 50) * 100}%` }} />
+                  <div className="h-full rounded-full bg-emerald-500" style={{ width: `${(answeredCount / session.questions.length) * 100}%` }} />
                 </div>
               </div>
               <div className="grid grid-cols-2 gap-2 text-center">

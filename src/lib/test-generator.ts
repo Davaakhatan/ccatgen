@@ -9,6 +9,8 @@ import {
 } from "@/lib/ccat-question-policy";
 
 const TEST_DURATION_MINUTES = 15;
+const CATEGORY_PRACTICE_QUESTIONS = 20;
+const CATEGORY_PRACTICE_MINUTES = 6;
 
 function shuffle<T>(array: T[]): T[] {
   const shuffled = [...array];
@@ -150,6 +152,70 @@ export async function generateTest(userId?: string) {
       questions: {
         create: shuffledIds.map((questionId, index) => ({
           questionId,
+          order: index + 1,
+        })),
+      },
+    },
+    include: {
+      questions: {
+        orderBy: { order: "asc" },
+        include: {
+          question: {
+            include: {
+              options: { select: { id: true, label: true, text: true } },
+            },
+          },
+        },
+      },
+    },
+  });
+
+  return {
+    sessionId: session.id,
+    endsAt: session.endsAt,
+    questions: session.questions.map((qi) => ({
+      instanceId: qi.id,
+      order: qi.order,
+      questionId: qi.questionId,
+      category: qi.question.category,
+      stem: qi.question.stem,
+      options: qi.question.options,
+    })),
+  };
+}
+
+export async function generateCategoryPractice(category: Category, userId?: string) {
+  const candidates = await getEligibleCandidates(category, [...CCAT_STYLE_TAGS[category]]);
+  const selected = [1, 2, 3]
+    .flatMap((difficulty) => sampleRandom(candidates.filter((q) => q.difficulty === difficulty), Math.ceil(CATEGORY_PRACTICE_QUESTIONS / 3)))
+    .slice(0, CATEGORY_PRACTICE_QUESTIONS);
+
+  if (selected.length < CATEGORY_PRACTICE_QUESTIONS) {
+    const selectedIds = new Set(selected.map((q) => q.id));
+    selected.push(
+      ...sampleRandom(
+        candidates.filter((q) => !selectedIds.has(q.id)),
+        CATEGORY_PRACTICE_QUESTIONS - selected.length
+      )
+    );
+  }
+
+  if (selected.length < CATEGORY_PRACTICE_QUESTIONS) {
+    throw new Error(`Not enough ${category} CCAT-style questions for category practice: need ${CATEGORY_PRACTICE_QUESTIONS}, found ${selected.length}`);
+  }
+
+  const now = new Date();
+  const endsAt = new Date(now.getTime() + CATEGORY_PRACTICE_MINUTES * 60 * 1000);
+
+  const session = await prisma.testSession.create({
+    data: {
+      userId: userId ?? null,
+      startedAt: now,
+      endsAt,
+      status: "active",
+      questions: {
+        create: selected.map((question, index) => ({
+          questionId: question.id,
           order: index + 1,
         })),
       },
