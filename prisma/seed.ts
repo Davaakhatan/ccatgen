@@ -55,6 +55,7 @@ import { mathLogicQuestions4 } from "./questions-math-4";
 import { spatialQuestions4 } from "./questions-spatial-4";
 import { verbalQuestions5 } from "./questions-verbal-5";
 import { mathLogicQuestions5 } from "./questions-math-5";
+import { letterSeriesHardQuestions } from "./questions-letter-series-hard";
 
 // ---------------------------------------------------------------------------
 // SEED FUNCTION
@@ -86,6 +87,7 @@ async function main() {
     ...spatialQuestions4,
     ...verbalQuestions5,
     ...mathLogicQuestions5,
+    ...letterSeriesHardQuestions,
   ];
   const allQuestions = dedupeByStem(rawQuestions.map(normalizeCcatQuestion).filter(isCcatStyleQuestion));
   console.log(`  Filtered out ${rawQuestions.length - allQuestions.length} duplicate or non-CCAT-style questions.`);

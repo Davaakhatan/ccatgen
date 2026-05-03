@@ -98,6 +98,24 @@ const mathLessons = [
     example: "3, 6, 11, 18, 27 has differences 3, 5, 7, 9, so next adds 11.",
   },
   {
+    type: "Alphabet pair series",
+    method: "Split each group into columns and solve each letter position separately.",
+    moves: ["Write A=1 through Z=26 if needed", "For ab, cd, ef: first letters a,c,e and second letters b,d,f both move +2", "For az, by, cx: first letter moves +1, second moves -1", "For bd, eg, hj: both letters move +3", "Watch wraparound after z"],
+    example: "ab ... cd ... ef ... gh ... ? becomes first letters a,c,e,g -> i and second letters b,d,f,h -> j, so the answer is ij.",
+  },
+  {
+    type: "Alphabet triple series",
+    method: "Treat each slot as its own mini-sequence.",
+    moves: ["ACE, BDF, CEG means each slot moves +1", "ABC, ACE, AEG means first slot stays A while second and third move", "If one slot changes faster, solve the slowest slot first", "Reject options with one correct letter but wrong other slots"],
+    example: "ace ... bdf ... ceg ... dfh ... ? gives egi because a,b,c,d -> e; c,d,e,f -> g; e,f,g,h -> i.",
+  },
+  {
+    type: "Alphabet skip traps",
+    method: "Do not read pairs as words. Read alphabet positions.",
+    moves: ["Adjacent pair: ab -> cd -> ef", "Gap pair: bd -> eg -> hj", "Mirror pair: az -> by -> cx", "Increasing jump: ab -> de -> hi -> mn"],
+    example: "bd ... eg ... hj ... km ... ? moves +3 in both slots, so the next group is np.",
+  },
+  {
     type: "Syllogisms",
     method: "Treat the statements as law. Do not use outside knowledge.",
     moves: ["All A are B does not mean all B are A", "Some means at least one", "Only X can Y means Y -> X", "If location or condition changes, answer uncertain"],
@@ -183,13 +201,21 @@ const categoryCoverage = [
   {
     label: "Math & Logic",
     count: "17",
-    items: ["Averages", "Percentages", "Ratios", "Rates", "Work", "Series", "Data", "Syllogisms", "Probability"],
+    items: ["Averages", "Percentages", "Ratios", "Rates", "Work", "Number series", "Letter series", "Data", "Syllogisms", "Probability"],
   },
   {
     label: "Spatial",
     count: "11",
     items: ["Odd one out", "Shape series", "Rotation", "Reflection", "Matrices", "Overlay", "Counting"],
   },
+];
+
+const alphabetPatterns = [
+  { name: "Adjacent pairs", pattern: "ab ... cd ... ef ... gh", answer: "ij", rule: "Both slots move +2." },
+  { name: "Skip pairs", pattern: "bd ... eg ... hj ... km", answer: "np", rule: "Both slots move +3." },
+  { name: "Mirror pairs", pattern: "az ... by ... cx ... dw", answer: "ev", rule: "First slot +1, second slot -1." },
+  { name: "Triple columns", pattern: "ace ... bdf ... ceg ... dfh", answer: "egi", rule: "Solve first, second, third letters separately." },
+  { name: "Increasing jumps", pattern: "ab ... de ... hi ... mn", answer: "st", rule: "Starting letters jump +3, +4, +5, then +6." },
 ];
 
 const skipSignals = [
@@ -318,6 +344,23 @@ export default function LessonsPage() {
             >
               {loadingCategory === "spatial" ? "Starting..." : "Spatial Drill"}
             </button>
+          </div>
+        </section>
+
+        <section className="rounded-lg border border-slate-200 bg-white p-5 shadow-sm">
+          <h2 className="text-xl font-bold">Alphabet Series Speed Sheet</h2>
+          <p className="mt-2 text-sm leading-6 text-slate-600">
+            These letter-pair and letter-group questions are official-style logic items. The fast method is always the same: split the group into slots, convert letters to movement, then compare choices.
+          </p>
+          <div className="mt-4 grid gap-3 lg:grid-cols-5">
+            {alphabetPatterns.map((item) => (
+              <div key={item.name} className="rounded-lg border border-slate-200 bg-slate-50 p-4">
+                <h3 className="text-sm font-semibold">{item.name}</h3>
+                <p className="mt-2 font-mono text-sm text-slate-700">{item.pattern}</p>
+                <p className="mt-2 text-sm font-semibold text-slate-950">Next: {item.answer}</p>
+                <p className="mt-2 text-xs leading-5 text-slate-600">{item.rule}</p>
+              </div>
+            ))}
           </div>
         </section>
 

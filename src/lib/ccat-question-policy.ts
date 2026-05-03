@@ -213,12 +213,16 @@ export function isCcatStyleQuestion(q: CcatQuestionLike) {
   const hasCorrectLabel = q.correctLabel === undefined || q.options.some((option) => option.label === q.correctLabel);
   const givesAwayPattern = NON_TESTLIKE_STEM_PATTERNS.some((pattern) => pattern.test(q.stem));
   const isOfficialDirectMath = OFFICIAL_DIRECT_MATH_PATTERNS.some((pattern) => pattern.test(q.stem));
+  const isPatternSeries =
+    q.category === "math_logic" &&
+    (q.tags.includes("letter-series") || q.tags.includes("number-sequence") || q.tags.includes("number-series"));
   const isTooEasyMath =
     q.category === "math_logic" &&
     q.difficulty !== undefined &&
     q.difficulty < 3 &&
     !isSyllogism &&
-    !isOfficialDirectMath;
+    !isOfficialDirectMath &&
+    !(isPatternSeries && q.difficulty >= 2);
   const isTooEasyVerbalOrSpatial =
     (q.category === "verbal" || q.category === "spatial") &&
     q.difficulty !== undefined &&

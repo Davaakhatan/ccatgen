@@ -231,12 +231,16 @@ function isCcatStyle(q) {
       : q.options.length === 5;
   const givesAwayPattern = nonTestlikeStemPatterns.some((pattern) => pattern.test(q.stem));
   const isOfficialDirectMath = officialDirectMathPatterns.some((pattern) => pattern.test(q.stem));
+  const isPatternSeries =
+    q.category === "math_logic" &&
+    (q.tags.includes("letter-series") || q.tags.includes("number-sequence") || q.tags.includes("number-series"));
   const isTooEasyMath =
     q.category === "math_logic" &&
     q.difficulty !== undefined &&
     q.difficulty < 3 &&
     !isSyllogism &&
-    !isOfficialDirectMath;
+    !isOfficialDirectMath &&
+    !(isPatternSeries && q.difficulty >= 2);
   const isTooEasyVerbalOrSpatial =
     (q.category === "verbal" || q.category === "spatial") &&
     q.difficulty !== undefined &&
