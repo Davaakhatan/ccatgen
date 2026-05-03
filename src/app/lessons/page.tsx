@@ -27,6 +27,25 @@ const timingRules = [
   },
 ];
 
+const formatStrategy = [
+  {
+    title: "Four scored domains",
+    detail: "Train verbal, numerical, logical, and spatial reasoning. This app groups numerical and logical into one drill, but the lessons separate the solving methods.",
+  },
+  {
+    title: "18-second average",
+    detail: "A 50-question, 15-minute test gives about 18 seconds per item. If the method is not visible quickly, eliminate, choose, and keep moving.",
+  },
+  {
+    title: "No-calculator math",
+    detail: "Use fractions, estimation, answer testing, and common percentage anchors before formal algebra. Long arithmetic is usually a trap.",
+  },
+  {
+    title: "Crossover score buffer",
+    detail: "For a strict 40+/50 target, practice above the line: 43+/50 on full tests and 24+/30 on hard drills before attempting the real assessment.",
+  },
+];
+
 const verbalLessons = [
   {
     type: "Analogies",
@@ -122,6 +141,12 @@ const mathLessons = [
     example: "Rules for East Village class do not prove the same rule in West Village, so the final claim is uncertain.",
   },
   {
+    type: "Conditional logic",
+    method: "Translate statements into arrows and only trust valid reversals.",
+    moves: ["If A then B means A -> B", "Not B proves not A", "B alone does not prove A", "Only A are B usually means B -> A"],
+    example: "If every approved report is archived, then a report that is not archived cannot be approved.",
+  },
+  {
     type: "Data interpretation",
     method: "Read the question first, then inspect only the needed row or column.",
     moves: ["Largest increase uses differences, not largest value", "Percentage change = change / original", "More than asks for subtraction after both values are found"],
@@ -199,9 +224,9 @@ const categoryCoverage = [
     items: ["Analogies", "Antonyms", "Sentence completion", "Two-blank context", "Vocabulary roots"],
   },
   {
-    label: "Math & Logic",
+    label: "Numerical & Logical",
     count: "17",
-    items: ["Averages", "Percentages", "Ratios", "Rates", "Work", "Number series", "Letter series", "Data", "Syllogisms", "Probability"],
+    items: ["Averages", "Percentages", "Ratios", "Rates", "Work", "Number series", "Letter series", "Data", "Syllogisms", "Conditionals", "Probability"],
   },
   {
     label: "Spatial",
@@ -274,6 +299,21 @@ export default function LessonsPage() {
         </section>
 
         <section className="rounded-lg border border-slate-200 bg-white p-5 shadow-sm">
+          <h2 className="text-xl font-bold">Public Format Strategy</h2>
+          <p className="mt-2 text-sm leading-6 text-slate-600">
+            Public CCAT format overviews are useful for strategy, not for copying questions. The important takeaway is that the test punishes slow solving more than weak knowledge.
+          </p>
+          <div className="mt-4 grid gap-4 lg:grid-cols-4">
+            {formatStrategy.map((item) => (
+              <div key={item.title} className="rounded-lg border border-slate-200 bg-slate-50 p-4">
+                <h3 className="font-semibold">{item.title}</h3>
+                <p className="mt-2 text-sm leading-6 text-slate-600">{item.detail}</p>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        <section className="rounded-lg border border-slate-200 bg-white p-5 shadow-sm">
           <h2 className="text-xl font-bold">40+ Training Protocol</h2>
           <div className="mt-4 grid gap-4 lg:grid-cols-[1fr_1fr]">
             <div className="rounded-lg border border-amber-200 bg-amber-50 p-4">
@@ -335,7 +375,7 @@ export default function LessonsPage() {
               disabled={loadingCategory !== null}
               className="rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm font-semibold text-emerald-700 transition-colors hover:bg-emerald-100 disabled:opacity-50"
             >
-              {loadingCategory === "math_logic" ? "Starting..." : "Math & Logic Drill"}
+              {loadingCategory === "math_logic" ? "Starting..." : "Numerical & Logic Drill"}
             </button>
             <button
               onClick={() => startPractice({ category: "spatial" })}
@@ -417,11 +457,12 @@ export default function LessonsPage() {
         <section className="rounded-lg border border-slate-200 bg-white p-5 shadow-sm">
           <h2 className="text-xl font-bold">Source Notes</h2>
           <p className="mt-2 text-sm leading-6 text-slate-600">
-            Built from public Criteria and Crossover CCAT guidance plus public candidate discussion patterns: 50 questions, 15 minutes, no calculator, verbal/math/spatial categories, no penalty for wrong answers, increasing difficulty, and heavy emphasis on 18-second pacing.
+            Built from public Criteria, Crossover, and TestCCAT-style format guidance plus public candidate discussion patterns: 50 questions, 15 minutes, no calculator, verbal/numerical/logical/spatial categories, no penalty for wrong answers, increasing difficulty, and heavy emphasis on 18-second pacing.
           </p>
           <div className="mt-4 flex flex-wrap gap-3 text-sm">
             <a href="https://www.criteriacorp.com/candidates/ccat-prep" className="font-semibold text-slate-700 underline">Criteria CCAT prep</a>
             <a href="https://www.crossover.com/resources/ccat-guide" className="font-semibold text-slate-700 underline">Crossover CCAT guide</a>
+            <a href="https://testccat.com/ccat-exam-format-overview" className="font-semibold text-slate-700 underline">TestCCAT format overview</a>
             <a href="https://www.reddit.com/r/recruitinghell/comments/1rybr97/ccat_exam/" className="font-semibold text-slate-700 underline">Reddit timing discussion</a>
           </div>
         </section>
