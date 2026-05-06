@@ -25,6 +25,9 @@ function fastMethod(question: QuestionForReview) {
   }
 
   if (question.category === "verbal") {
+    if (tags.has("attention-to-detail")) {
+      return "Fast method: lock onto one character group at a time, scan left to right, and check confusing pairs such as 0/O, 1/I, 8/B, missing punctuation, and transposed digits.";
+    }
     if (tags.has("analogy")) {
       return "Fast method: name the relationship before reading choices, then reject pairs with the wrong relationship direction.";
     }
@@ -34,6 +37,9 @@ function fastMethod(question: QuestionForReview) {
     return "Fast method: predict the missing meaning from the sentence tone before checking choices.";
   }
 
+  if (tags.has("ordering-logic")) {
+    return "Fast method: draw numbered slots, place fixed/immediate clues first, then test only the choices against those forced positions.";
+  }
   if (tags.has("true-false-uncertain") || tags.has("syllogism") || tags.has("logical-deduction")) {
     return "Fast method: treat the statements as law, avoid outside knowledge, and only accept conclusions forced by the given statements.";
   }
@@ -61,6 +67,9 @@ function correctReason(question: QuestionForReview, correctLabel: string) {
   }
 
   if (question.category === "verbal") {
+    if (tags.has("attention-to-detail")) {
+      return `Option ${correctLabel} is correct because it is the only choice that exactly matches the target or breaks the stated detail pattern.`;
+    }
     return `Option ${correctLabel} is correct because it best matches the required meaning or relationship in the stem.`;
   }
 
@@ -81,6 +90,9 @@ function eliminationReason(question: QuestionForReview, label: string, correctLa
   }
 
   if (question.category === "verbal") {
+    if (tags.has("attention-to-detail")) {
+      return `Eliminate ${label}: it has a character, punctuation, order, or pattern mismatch that ${correctLabel} avoids.`;
+    }
     if (tags.has("analogy")) {
       return `Eliminate ${label}: the word pair does not preserve the same relationship direction as the stem.`;
     }
@@ -90,6 +102,9 @@ function eliminationReason(question: QuestionForReview, label: string, correctLa
     return `Eliminate ${label}: it does not fit the sentence logic, tone, or grammar as tightly as ${correctLabel}.`;
   }
 
+  if (tags.has("ordering-logic")) {
+    return `Eliminate ${label}: it violates at least one ordering clue or immediate-neighbor constraint.`;
+  }
   if (tags.has("true-false-uncertain") || tags.has("syllogism") || tags.has("logical-deduction")) {
     return `Eliminate ${label}: the conclusion is not forced by the statements, or it reverses a condition.`;
   }

@@ -83,6 +83,12 @@ const verbalLessons = [
     moves: ["Mark positive/negative tone", "Reject choices where only one blank works", "Check if the second word makes the sentence too extreme"],
     example: "If the sentence says the manager calmed a conflict, the second blank should not be furious or hostile.",
   },
+  {
+    type: "Attention to detail",
+    method: "Compare exact characters, not the meaning of the text.",
+    moves: ["Scan in chunks of 3-4 characters", "Watch 0/O, 1/I, 5/S, 8/B", "Check punctuation and spacing last", "For pattern questions, mark the required slot type first"],
+    example: "For RQ-47M9-L2B6, reject RQ-47N9-L2B6 because one letter changed even though the shape of the code looks similar.",
+  },
 ];
 
 const mathLessons = [
@@ -145,6 +151,12 @@ const mathLessons = [
     method: "Translate statements into arrows and only trust valid reversals.",
     moves: ["If A then B means A -> B", "Not B proves not A", "B alone does not prove A", "Only A are B usually means B -> A"],
     example: "If every approved report is archived, then a report that is not archived cannot be approved.",
+  },
+  {
+    type: "Ordering constraints",
+    method: "Draw slots and place fixed or immediate clues first.",
+    moves: ["Write 1-5 or 1-6 slots", "Place clues like first, last, immediately before/after", "Use before/after clues only after fixed clues", "Test options instead of listing every possible order"],
+    example: "If B is immediately before C, cross out every option where B and C are separated or reversed.",
   },
   {
     type: "Data interpretation",
@@ -221,12 +233,12 @@ const categoryCoverage = [
   {
     label: "Verbal",
     count: "22",
-    items: ["Analogies", "Antonyms", "Sentence completion", "Two-blank context", "Vocabulary roots"],
+    items: ["Analogies", "Antonyms", "Sentence completion", "Two-blank context", "Vocabulary roots", "Attention to detail"],
   },
   {
     label: "Numerical & Logical",
     count: "17",
-    items: ["Averages", "Percentages", "Ratios", "Rates", "Work", "Number series", "Letter series", "Data", "Syllogisms", "Conditionals", "Probability"],
+    items: ["Averages", "Percentages", "Ratios", "Rates", "Work", "Number series", "Letter series", "Data", "Syllogisms", "Conditionals", "Ordering constraints", "Probability"],
   },
   {
     label: "Spatial",
@@ -463,6 +475,7 @@ export default function LessonsPage() {
             <a href="https://www.criteriacorp.com/candidates/ccat-prep" className="font-semibold text-slate-700 underline">Criteria CCAT prep</a>
             <a href="https://www.crossover.com/resources/ccat-guide" className="font-semibold text-slate-700 underline">Crossover CCAT guide</a>
             <a href="https://testccat.com/ccat-exam-format-overview" className="font-semibold text-slate-700 underline">TestCCAT format overview</a>
+            <a href="https://prepccat.com/blog/ccat-question-types" className="font-semibold text-slate-700 underline">Public question-type overview</a>
             <a href="https://www.reddit.com/r/recruitinghell/comments/1rybr97/ccat_exam/" className="font-semibold text-slate-700 underline">Reddit timing discussion</a>
           </div>
         </section>

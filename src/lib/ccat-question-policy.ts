@@ -14,13 +14,15 @@ export const CCAT_CATEGORY_DISTRIBUTIONS = [
 ] as const;
 
 export const CCAT_SECTION_BLUEPRINT = [
-  { category: "verbal", total: 8, tags: ["analogy"] },
-  { category: "verbal", total: 7, tags: ["antonym"] },
-  { category: "verbal", total: 7, tags: ["sentence-completion"] },
+  { category: "verbal", total: 6, tags: ["analogy"] },
+  { category: "verbal", total: 6, tags: ["antonym"] },
+  { category: "verbal", total: 6, tags: ["sentence-completion"] },
+  { category: "verbal", total: 4, tags: ["attention-to-detail"] },
   { category: "math_logic", total: 4, tags: ["word-problem", "algebra", "ratio", "percentage"] },
   { category: "math_logic", total: 4, tags: ["number-sequence", "number-series", "letter-series"] },
   { category: "math_logic", total: 3, tags: ["data-interpretation", "graph-interpretation"] },
-  { category: "math_logic", total: 6, tags: ["syllogism", "true-false-uncertain", "logical-deduction"] },
+  { category: "math_logic", total: 4, tags: ["syllogism", "true-false-uncertain", "logical-deduction"] },
+  { category: "math_logic", total: 2, tags: ["ordering-logic"] },
   { category: "spatial", total: 4, tags: ["next-in-series", "rotation", "sequence"] },
   { category: "spatial", total: 3, tags: ["matrix"] },
   { category: "spatial", total: 2, tags: ["reflection", "spatial-reasoning", "transformation"] },
@@ -31,6 +33,7 @@ export const CCAT_STYLE_TAGS = {
   verbal: new Set([
     "analogy",
     "antonym",
+    "attention-to-detail",
     "sentence-completion",
   ]),
   math_logic: new Set([
@@ -41,6 +44,7 @@ export const CCAT_STYLE_TAGS = {
     "logical-deduction",
     "number-sequence",
     "number-series",
+    "ordering-logic",
     "percentage",
     "ratio",
     "syllogism",
@@ -247,6 +251,10 @@ export function isCcatStyleQuestion(q: CcatQuestionLike) {
     (q.category === "verbal" || q.category === "spatial") &&
     q.difficulty !== undefined &&
     q.difficulty < 2;
+  const isTrustedOriginalDetail =
+    q.tags.includes("ccat-original") &&
+    q.difficulty !== undefined &&
+    q.difficulty >= 2;
   const hasElementaryMathTag =
     q.category === "math_logic" &&
     q.tags.some((tag) => ELEMENTARY_MATH_TAGS.has(tag)) &&
@@ -261,7 +269,7 @@ export function isCcatStyleQuestion(q: CcatQuestionLike) {
     hasAnyCcatTag(q) &&
     optionCountIsValid &&
     hasCorrectLabel &&
-    !givesAwayPattern &&
+    (!givesAwayPattern || isTrustedOriginalDetail) &&
     !isTooEasyMath &&
     !isTooEasyVerbalOrSpatial &&
     !hasElementaryMathTag &&

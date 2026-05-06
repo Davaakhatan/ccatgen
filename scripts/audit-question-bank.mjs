@@ -15,6 +15,7 @@ const ccatStyleTags = {
   verbal: new Set([
     "analogy",
     "antonym",
+    "attention-to-detail",
     "sentence-completion",
   ]),
   math_logic: new Set([
@@ -25,6 +26,7 @@ const ccatStyleTags = {
     "logical-deduction",
     "number-sequence",
     "number-series",
+    "ordering-logic",
     "percentage",
     "ratio",
     "syllogism",
@@ -265,6 +267,10 @@ function isCcatStyle(q) {
     (q.category === "verbal" || q.category === "spatial") &&
     q.difficulty !== undefined &&
     q.difficulty < 2;
+  const isTrustedOriginalDetail =
+    q.tags.includes("ccat-original") &&
+    q.difficulty !== undefined &&
+    q.difficulty >= 2;
   const hasElementaryMathTag =
     q.category === "math_logic" &&
     q.tags.some((tag) => elementaryMathTags.has(tag)) &&
@@ -279,7 +285,7 @@ function isCcatStyle(q) {
     hasAllowedTag &&
     optionCountIsValid &&
     q.options.some((option) => option.label === q.correctLabel) &&
-    !givesAwayPattern &&
+    (!givesAwayPattern || isTrustedOriginalDetail) &&
     !isTooEasyMath &&
     !isTooEasyVerbalOrSpatial &&
     !hasElementaryMathTag &&
