@@ -1,5 +1,6 @@
 type QuestionForReview = {
   category: "verbal" | "math_logic" | "spatial";
+  stem?: string;
   tags: string[];
   options: { id: string; label: string; text: string }[];
   correctOptionId: string;
@@ -11,8 +12,29 @@ function categoryLabel(category: QuestionForReview["category"]) {
   return "Spatial";
 }
 
+function taggedSolution(question: QuestionForReview) {
+  return question.tags.find((tag) => tag.startsWith("solution:"))?.slice("solution:".length);
+}
+
 function fastMethod(question: QuestionForReview) {
   const tags = new Set(question.tags);
+  const solution = taggedSolution(question);
+
+  if (solution) {
+    if (tags.has("true-false-uncertain") || tags.has("syllogism")) {
+      return "Fast method: draw only the forced set relationships, then choose cannot be determined when the conclusion needs a link that is not stated.";
+    }
+    if (tags.has("graph-interpretation") || tags.has("data-interpretation")) {
+      return "Fast method: read the two needed values from the chart, compute change, then divide by the starting value.";
+    }
+    if (tags.has("number-series") || tags.has("number-sequence")) {
+      return "Fast method: write the differences or repeated operation pattern above the sequence before checking answer choices.";
+    }
+    if (tags.has("analogy")) {
+      return "Fast method: name the relationship and intensity first, then find the pair with the same relationship.";
+    }
+    return "Fast method: translate the question into one short operation, estimate the answer range, then choose the matching option.";
+  }
 
   if (question.category === "spatial") {
     if (tags.has("matrix")) {
@@ -55,6 +77,11 @@ function fastMethod(question: QuestionForReview) {
 
 function correctReason(question: QuestionForReview, correctLabel: string) {
   const tags = new Set(question.tags);
+  const solution = taggedSolution(question);
+
+  if (solution) {
+    return `Option ${correctLabel} is correct. ${solution}`;
+  }
 
   if (question.category === "spatial") {
     if (tags.has("matrix")) {
@@ -78,6 +105,11 @@ function correctReason(question: QuestionForReview, correctLabel: string) {
 
 function eliminationReason(question: QuestionForReview, label: string, correctLabel: string) {
   const tags = new Set(question.tags);
+  const solution = taggedSolution(question);
+
+  if (solution) {
+    return `Eliminate ${label}: it does not match the computed result. ${solution}`;
+  }
 
   if (question.category === "spatial") {
     if (tags.has("matrix")) {

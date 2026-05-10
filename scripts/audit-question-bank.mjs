@@ -82,6 +82,16 @@ const nonTestlikeStemPatterns = [
   /^a company'?s revenue grew from .+ what is the percentage increase\b/i,
   /^if \d*x \+ \d+y = \d+ and x = \d+, what is y\??$/i,
   /^if \d*x \+ \d+ = \d+, what is x\??$/i,
+  /\bf\s*\(\s*x\s*\)/i,
+  /\bg\s*\(\s*x\s*\)/i,
+  /\blog(?:₁₀|10|_10)?\s*\(/i,
+  /x²/i,
+  /x\^2/i,
+  /\bquadratic\b/i,
+  /\bfactorial\b/i,
+  /\bleast common multiple\b/i,
+  /\bsimplify the equation\b/i,
+  /\bsolve the equation\b/i,
   /^a factory produces \d+ units\/day with a \d+% defect rate\. how many non-defective units\b/i,
   /^a group of \d+ friends shares a restaurant bill\b/i,
   /^a store marks up goods\b/i,
@@ -267,7 +277,7 @@ function isCcatStyle(q) {
     (q.category === "verbal" || q.category === "spatial") &&
     q.difficulty !== undefined &&
     q.difficulty < 2;
-  const isTrustedOriginalDetail =
+  const isTrustedOriginal =
     q.tags.includes("ccat-original") &&
     q.difficulty !== undefined &&
     q.difficulty >= 2;
@@ -285,11 +295,11 @@ function isCcatStyle(q) {
     hasAllowedTag &&
     optionCountIsValid &&
     q.options.some((option) => option.label === q.correctLabel) &&
-    (!givesAwayPattern || isTrustedOriginalDetail) &&
-    !isTooEasyMath &&
+    (!givesAwayPattern || isTrustedOriginal) &&
+    (!isTooEasyMath || isTrustedOriginal) &&
     !isTooEasyVerbalOrSpatial &&
-    !hasElementaryMathTag &&
-    !isUnchallengingWordProblem
+    (!hasElementaryMathTag || isTrustedOriginal) &&
+    (!isUnchallengingWordProblem || isTrustedOriginal)
   );
 }
 

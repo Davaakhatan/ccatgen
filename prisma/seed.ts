@@ -59,6 +59,7 @@ import { letterSeriesHardQuestions } from "./questions-letter-series-hard";
 import { ccatSpatialQuestions } from "./questions-spatial-ccat";
 import { attentionDetailCcatQuestions } from "./questions-attention-detail-ccat";
 import { orderingLogicCcatQuestions } from "./questions-ordering-logic-ccat";
+import { practiceMathCcatQuestions } from "./questions-practice-math-ccat";
 
 // ---------------------------------------------------------------------------
 // SEED FUNCTION
@@ -94,6 +95,7 @@ async function main() {
     ...ccatSpatialQuestions,
     ...attentionDetailCcatQuestions,
     ...orderingLogicCcatQuestions,
+    ...practiceMathCcatQuestions,
   ];
   const allQuestions = dedupeByStem(rawQuestions.map(normalizeCcatQuestion).filter(isCcatStyleQuestion));
   console.log(`  Filtered out ${rawQuestions.length - allQuestions.length} duplicate or non-CCAT-style questions.`);
