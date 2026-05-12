@@ -23,7 +23,6 @@ const ccatStyleTags = {
     "data-interpretation",
     "graph-interpretation",
     "letter-series",
-    "logical-deduction",
     "number-sequence",
     "number-series",
     "ordering-logic",
@@ -100,6 +99,9 @@ const nonTestlikeStemPatterns = [
   /\bliar always lies\b/i,
   /\bidentical-looking coins\b/i,
   /\bbalance scale\b/i,
+  /\bcoins? total\b/i,
+  /\bfox\b.+\bchicken\b.+\bgrain\b/i,
+  /\bcross a river\b/i,
   /\bswitches control .* lights\b/i,
   /\bminimum number of switches\b/i,
   /\bsit in a row\b/i,
@@ -108,6 +110,10 @@ const nonTestlikeStemPatterns = [
   /\bwho finished\b/i,
   /\bwhat is the finishing order\b/i,
   /\bwhat color is the\b/i,
+  /\bfavorite color\b/i,
+  /\bdifferent color\b/i,
+  /\bdifferent pet\b/i,
+  /\bown a different pet\b/i,
   /\bhouses are in a row\b/i,
   /\bminimum number of weighings\b/i,
   /\bhow many different .* arrangements\b/i,
@@ -161,6 +167,23 @@ const nonTestlikeStemPatterns = [
   /\bhow many peaks\b/i,
   /\bwhich replaces the\b/i,
   /\bwhich pair shows\b/i,
+  /\bbased on\b/i,
+  /\ball except one\b/i,
+  /\ball others\b/i,
+  /\bfour (?:shapes?|figures?) follow\b/i,
+  /\bfour follow\b/i,
+  /\bconsider (?:the )?(?:number|symmetry|edge|internal)/i,
+  /\bsame area relationship\b/i,
+  /\bshape inside a shape\b/i,
+  /\bline of symmetry\b/i,
+  /\bvalid net\b/i,
+  /\bfolded\b/i,
+  /\bhole is punched\b/i,
+  /\bcube\b/i,
+  /\bcone\b/i,
+  /\bcylinder\b/i,
+  /\bpyramid\b/i,
+  /\bregions\b/i,
   /\bunit cubes\b/i,
   /^3x3 grid:/i,
   /\bif you cut\b.+\bhow many edges\b/i,
@@ -189,11 +212,7 @@ const nonTestlikeStemPatterns = [
 
 const elementaryMathTags = new Set(["basic-math", "percentage"]);
 
-const officialDirectMathPatterns = [
-  /\baverage of\b/i,
-  /\bwhat is the (?:third|fourth|fifth) number\b/i,
-  /\b\d+(?:\.\d+)?%\s+of\s+what\s+number\b/i,
-];
+const officialDirectMathPatterns = [];
 
 const complexWordProblemPatterns = [
   /\baverage speed\b/i,
