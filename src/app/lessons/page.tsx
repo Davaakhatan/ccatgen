@@ -29,8 +29,8 @@ const timingRules = [
 
 const formatStrategy = [
   {
-    title: "Four scored domains",
-    detail: "Train verbal, numerical, logical, and spatial reasoning. This app groups numerical and logical into one drill, but the lessons separate the solving methods.",
+    title: "Three official buckets",
+    detail: "Train verbal, math and logic, and spatial reasoning. The lessons split math into subskills so you can drill the weak part without changing the official test mix.",
   },
   {
     title: "18-second average",
@@ -38,7 +38,7 @@ const formatStrategy = [
   },
   {
     title: "No-calculator math",
-    detail: "Use fractions, estimation, answer testing, and common percentage anchors before formal algebra. Long arithmetic is usually a trap.",
+    detail: "Use fractions, estimation, answer testing, and percentage anchors. Pure functions, logarithms, and school-geometry drills are filtered out of active practice.",
   },
   {
     title: "Crossover score buffer",
@@ -247,6 +247,13 @@ const categoryCoverage = [
   },
 ];
 
+const qualityRules = [
+  "No pure function, logarithm, quadratic, trigonometry, factorial, or geometry-formula drills.",
+  "Math stays applied: percentages, ratios, rates, averages, data, number series, and short logic.",
+  "Spatial stays visual: odd-one-out, next figure, matrix completion, rotation/reflection, and symbol movement.",
+  "Every seeded original item carries a correct answer and a solution note for result review.",
+];
+
 const alphabetPatterns = [
   { name: "Adjacent pairs", pattern: "ab ... cd ... ef ... gh", answer: "ij", rule: "Both slots move +2." },
   { name: "Skip pairs", pattern: "bd ... eg ... hj ... km", answer: "np", rule: "Both slots move +3." },
@@ -364,6 +371,20 @@ export default function LessonsPage() {
                     <li key={item}>- {item}</li>
                   ))}
                 </ul>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        <section className="rounded-lg border border-slate-200 bg-white p-5 shadow-sm">
+          <h2 className="text-xl font-bold">Question Quality Gate</h2>
+          <p className="mt-2 text-sm leading-6 text-slate-600">
+            The active seed now rejects broad school-test material that does not match public CCAT-style practice.
+          </p>
+          <div className="mt-4 grid gap-3 lg:grid-cols-4">
+            {qualityRules.map((rule) => (
+              <div key={rule} className="rounded-lg border border-slate-200 bg-slate-50 p-4 text-sm leading-6 text-slate-700">
+                {rule}
               </div>
             ))}
           </div>

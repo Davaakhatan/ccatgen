@@ -89,7 +89,7 @@ export default function TestRunnerPage() {
     return () => clearInterval(interval);
   }, [loading, timeLeft, finishTest]);
 
-  async function handleAnswer(questionId: string, optionId: string) {
+  const handleAnswer = useCallback(async (questionId: string, optionId: string) => {
     setAnswers((prev) => ({ ...prev, [questionId]: optionId }));
     try {
       await fetch(`/api/test-sessions/${sessionId}/answer`, {
@@ -100,13 +100,50 @@ export default function TestRunnerPage() {
     } catch {
       // Silently handle — answer is stored locally
     }
-  }
+  }, [sessionId]);
+
+  const goToNextUnanswered = useCallback(() => {
+    if (!session) return;
+    const nextIndex = session.questions.findIndex((q, index) => index > currentIndex && !answers[q.questionId]);
+    if (nextIndex >= 0) {
+      setCurrentIndex(nextIndex);
+      return;
+    }
+
+    const firstIndex = session.questions.findIndex((q) => !answers[q.questionId]);
+    if (firstIndex >= 0) setCurrentIndex(firstIndex);
+  }, [answers, currentIndex, session]);
 
   function handleFinish() {
     if (confirm("Are you sure you want to finish the test? You cannot go back.")) {
       finishTest();
     }
   }
+
+  useEffect(() => {
+    function onKeyDown(event: KeyboardEvent) {
+      if (!session) return;
+      if (event.target instanceof HTMLInputElement || event.target instanceof HTMLTextAreaElement) return;
+
+      const activeQuestion = session.questions[currentIndex];
+      if (event.key >= "1" && event.key <= "5") {
+        const option = activeQuestion.options[Number(event.key) - 1];
+        if (option) handleAnswer(activeQuestion.questionId, option.id);
+      }
+      if (event.key === "ArrowRight" || event.key === "Enter") {
+        setCurrentIndex((i) => Math.min(session.questions.length - 1, i + 1));
+      }
+      if (event.key === "ArrowLeft") {
+        setCurrentIndex((i) => Math.max(0, i - 1));
+      }
+      if (event.key.toLowerCase() === "s") {
+        goToNextUnanswered();
+      }
+    }
+
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [currentIndex, goToNextUnanswered, handleAnswer, session]);
 
   if (loading) {
     return (
@@ -128,13 +165,20 @@ export default function TestRunnerPage() {
   const progressPct = Math.round(((currentIndex + 1) / session.questions.length) * 100);
   const totalDuration = Math.max(1, Math.floor((new Date(session.endsAt).getTime() - new Date(session.startedAt).getTime()) / 1000));
   const timePct = Math.round((timeLeft / totalDuration) * 100);
+  const categoryCounts = session.questions.reduce(
+    (counts, q) => {
+      counts[q.category as keyof typeof counts] += 1;
+      return counts;
+    },
+    { verbal: 0, math_logic: 0, spatial: 0 }
+  );
 
   return (
     <div className="min-h-screen bg-slate-50 flex flex-col">
       {/* Top Bar */}
       <div className="sticky top-0 z-10 border-b border-slate-200 bg-white px-4 py-3 shadow-sm">
         <div className="mx-auto flex max-w-6xl items-center justify-between gap-4">
-        <div className="flex items-center gap-5">
+        <div className="flex min-w-0 items-center gap-4 sm:gap-5">
           <div className={`flex items-center gap-2 px-3 py-1.5 rounded-lg ${isLowTime ? "bg-red-50" : "bg-slate-50"}`}>
             <svg className={`w-4 h-4 ${isLowTime ? "text-red-500" : "text-slate-400"}`} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -152,10 +196,17 @@ export default function TestRunnerPage() {
             </div>
           </div>
         </div>
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-2 sm:gap-4">
           <span className="text-sm text-slate-500 hidden sm:inline">
             {answeredCount} answered
           </span>
+          <button
+            onClick={goToNextUnanswered}
+            disabled={unansweredCount === 0}
+            className="hidden rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-sm font-medium text-slate-700 transition-colors hover:bg-slate-50 disabled:opacity-40 sm:inline-flex"
+          >
+            Next open
+          </button>
           <button
             onClick={handleFinish}
             disabled={submitting}
@@ -271,6 +322,26 @@ export default function TestRunnerPage() {
                   <div className="text-lg font-bold text-slate-950">{minutes}:{String(seconds).padStart(2, "0")}</div>
                   <div className="text-xs text-slate-500">Left</div>
                 </div>
+              </div>
+              <div className="rounded-md border border-slate-100 bg-slate-50 p-3">
+                <div className="mb-2 text-xs font-semibold uppercase tracking-wide text-slate-500">Mix</div>
+                <div className="grid grid-cols-3 gap-2 text-center text-xs">
+                  <div>
+                    <div className="font-bold text-blue-700">{categoryCounts.verbal}</div>
+                    <div className="text-slate-500">Verbal</div>
+                  </div>
+                  <div>
+                    <div className="font-bold text-emerald-700">{categoryCounts.math_logic}</div>
+                    <div className="text-slate-500">Math</div>
+                  </div>
+                  <div>
+                    <div className="font-bold text-violet-700">{categoryCounts.spatial}</div>
+                    <div className="text-slate-500">Spatial</div>
+                  </div>
+                </div>
+              </div>
+              <div className="rounded-md border border-slate-100 bg-white p-3 text-xs leading-5 text-slate-500">
+                Press 1-5 to answer, arrows to move, and S for next open question.
               </div>
             </div>
           </aside>

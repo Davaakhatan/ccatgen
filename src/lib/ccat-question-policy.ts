@@ -18,7 +18,7 @@ export const CCAT_SECTION_BLUEPRINT = [
   { category: "verbal", total: 6, tags: ["antonym"] },
   { category: "verbal", total: 6, tags: ["sentence-completion"] },
   { category: "verbal", total: 4, tags: ["attention-to-detail"] },
-  { category: "math_logic", total: 4, tags: ["word-problem", "algebra", "ratio", "percentage"] },
+  { category: "math_logic", total: 4, tags: ["word-problem", "ratio", "percentage"] },
   { category: "math_logic", total: 4, tags: ["number-sequence", "number-series", "letter-series"] },
   { category: "math_logic", total: 3, tags: ["data-interpretation", "graph-interpretation"] },
   { category: "math_logic", total: 4, tags: ["syllogism", "true-false-uncertain"] },
@@ -37,7 +37,6 @@ export const CCAT_STYLE_TAGS = {
     "sentence-completion",
   ]),
   math_logic: new Set([
-    "algebra",
     "data-interpretation",
     "graph-interpretation",
     "letter-series",
@@ -228,6 +227,27 @@ const NON_TESTLIKE_STEM_PATTERNS = [
   /\bconsider both\b/i,
 ];
 
+const DISALLOWED_STEM_PATTERNS = [
+  /\bf\s*\(\s*x\s*\)/i,
+  /\bg\s*\(\s*x\s*\)/i,
+  /\blog(?:[₀-₉]|10|_10|₂|2)?\s*\(/i,
+  /x²/i,
+  /x\^2/i,
+  /\bquadratic\b/i,
+  /\bfactorial\b/i,
+  /\bleast common multiple\b/i,
+  /\bgreatest common divisor\b/i,
+  /\bGCD\b/,
+  /\bscientific notation\b/i,
+  /\bcircumference\b/i,
+  /\binterior angles\b/i,
+  /\bsimplify the equation\b/i,
+  /\bsolve the equation\b/i,
+  /\bderivative\b/i,
+  /\bintegral\b/i,
+  /\bsin\b|\bcos\b|\btan\b/i,
+];
+
 const ELEMENTARY_MATH_TAGS = new Set(["basic-math", "percentage"]);
 
 const OFFICIAL_DIRECT_MATH_PATTERNS: RegExp[] = [];
@@ -264,6 +284,7 @@ export function isCcatStyleQuestion(q: CcatQuestionLike) {
       ? q.options.length >= 4 && q.options.length <= 5
       : q.options.length === 5;
   const hasCorrectLabel = q.correctLabel === undefined || q.options.some((option) => option.label === q.correctLabel);
+  const isDisallowedSchoolMath = DISALLOWED_STEM_PATTERNS.some((pattern) => pattern.test(q.stem));
   const givesAwayPattern = NON_TESTLIKE_STEM_PATTERNS.some((pattern) => pattern.test(q.stem));
   const isOfficialDirectMath = OFFICIAL_DIRECT_MATH_PATTERNS.some((pattern) => pattern.test(q.stem));
   const isPatternSeries =
@@ -298,6 +319,7 @@ export function isCcatStyleQuestion(q: CcatQuestionLike) {
     hasAnyCcatTag(q) &&
     optionCountIsValid &&
     hasCorrectLabel &&
+    !isDisallowedSchoolMath &&
     (!givesAwayPattern || isTrustedOriginal) &&
     (!isTooEasyMath || isTrustedOriginal) &&
     !isTooEasyVerbalOrSpatial &&

@@ -19,7 +19,6 @@ const ccatStyleTags = {
     "sentence-completion",
   ]),
   math_logic: new Set([
-    "algebra",
     "data-interpretation",
     "graph-interpretation",
     "letter-series",
@@ -210,6 +209,27 @@ const nonTestlikeStemPatterns = [
   /\bconsider both\b/i,
 ];
 
+const disallowedStemPatterns = [
+  /\bf\s*\(\s*x\s*\)/i,
+  /\bg\s*\(\s*x\s*\)/i,
+  /\blog(?:[₀-₉]|10|_10|₂|2)?\s*\(/i,
+  /x²/i,
+  /x\^2/i,
+  /\bquadratic\b/i,
+  /\bfactorial\b/i,
+  /\bleast common multiple\b/i,
+  /\bgreatest common divisor\b/i,
+  /\bGCD\b/,
+  /\bscientific notation\b/i,
+  /\bcircumference\b/i,
+  /\binterior angles\b/i,
+  /\bsimplify the equation\b/i,
+  /\bsolve the equation\b/i,
+  /\bderivative\b/i,
+  /\bintegral\b/i,
+  /\bsin\b|\bcos\b|\btan\b/i,
+];
+
 const elementaryMathTags = new Set(["basic-math", "percentage"]);
 
 const officialDirectMathPatterns = [];
@@ -281,6 +301,7 @@ function isCcatStyle(q) {
       ? q.options.length >= 4 && q.options.length <= 5
       : q.options.length === 5;
   const givesAwayPattern = nonTestlikeStemPatterns.some((pattern) => pattern.test(q.stem));
+  const isDisallowedSchoolMath = disallowedStemPatterns.some((pattern) => pattern.test(q.stem));
   const isOfficialDirectMath = officialDirectMathPatterns.some((pattern) => pattern.test(q.stem));
   const isPatternSeries =
     q.category === "math_logic" &&
@@ -314,6 +335,7 @@ function isCcatStyle(q) {
     hasAllowedTag &&
     optionCountIsValid &&
     q.options.some((option) => option.label === q.correctLabel) &&
+    !isDisallowedSchoolMath &&
     (!givesAwayPattern || isTrustedOriginal) &&
     (!isTooEasyMath || isTrustedOriginal) &&
     !isTooEasyVerbalOrSpatial &&

@@ -61,6 +61,7 @@ import { attentionDetailCcatQuestions } from "./questions-attention-detail-ccat"
 import { orderingLogicCcatQuestions } from "./questions-ordering-logic-ccat";
 import { practiceMathCcatQuestions } from "./questions-practice-math-ccat";
 import { ccatSpatialPatternQuestions } from "./questions-spatial-patterns-ccat";
+import { ccatCuratedExpansionQuestions } from "./questions-ccat-curated-expansion";
 
 // ---------------------------------------------------------------------------
 // SEED FUNCTION
@@ -98,6 +99,7 @@ async function main() {
     ...orderingLogicCcatQuestions,
     ...practiceMathCcatQuestions,
     ...ccatSpatialPatternQuestions,
+    ...ccatCuratedExpansionQuestions,
   ];
   const allQuestions = dedupeByStem(rawQuestions.map(normalizeCcatQuestion).filter(isCcatStyleQuestion));
   console.log(`  Filtered out ${rawQuestions.length - allQuestions.length} duplicate or non-CCAT-style questions.`);
